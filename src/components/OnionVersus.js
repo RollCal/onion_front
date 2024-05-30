@@ -10,7 +10,6 @@ function OnionVersus(props) {
     async function getVersusList() {
         try {
             const response = await axios.get('/api/onions/onionlist');
-            console.log(response.data);
             return response.data;
         } catch (error) {
             console.error(error);
@@ -27,7 +26,7 @@ function OnionVersus(props) {
         <div>
             {
                 versusList.map(item => (
-                    <OnionVersusFlow versus_id={item.id} key={item.id}/>
+                    <OnionVersusFlow versus_data={item} key={item.id}/>
                 ))
             }
         </div>
