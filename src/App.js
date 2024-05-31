@@ -1,19 +1,17 @@
-import './App.css';
-import OnionVersusFlow from "./components/OnionVersusFlow";
-import Layout from "./components/Layout";
-import OnionVersus from "./components/OnionVersus";
+import {ChakraProvider} from '@chakra-ui/react'
+import {BrowserRouter, Route, Routes} from "react-router-dom";
+import Home from "./components/route/Home";
 
 function App() {
+
     return (
-        <Layout>
-            <div style={{
-                display: "flex",
-                flexWrap: "wrap",
-                justifyContent: "space-around",
-            }}>
-                <OnionVersus/>
-            </div>
-        </Layout>
+        <ChakraProvider>
+            <BrowserRouter>
+                <Routes>
+                    <Route path="/" element={<Home/>}/>
+                </Routes>
+            </BrowserRouter>
+        </ChakraProvider>
     );
 }
 
