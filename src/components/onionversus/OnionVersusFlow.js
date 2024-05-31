@@ -72,9 +72,19 @@ function OnionVersusFlow(prop) {
 
     const defaultViewport = { x: 450, y: 150, zoom: 1};
 
+    const onNodeClick = (event, node) => {
+
+    }
+
     return (
         <div style={{width: '1000px', height: '300px', border: '2px solid', marginTop: "10px", marginBottom: "10px", borderRadius: "10px", borderColor: "lightgrey"}}>
-            <ReactFlow nodes={nodes} edges={edges} onNodesChange={onNodesChange} defaultViewport={defaultViewport}>
+            <ReactFlow
+                nodes={nodes}
+                edges={edges}
+                onNodesChange={onNodesChange}
+                defaultViewport={defaultViewport}
+                onNodeClick={onNodeClick}
+            >
                 <MiniMap/>
                 <Controls/>
             </ReactFlow>
