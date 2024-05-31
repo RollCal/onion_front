@@ -1,6 +1,7 @@
 import React from 'react';
 import {Box, Button, ButtonGroup, Flex, Grid, GridItem, Image, Spacer} from '@chakra-ui/react'
 import OnionVersus from "./onionversus/OnionVersus";
+import {Link} from "react-router-dom";
 
 function Layout(props) {
     return (
@@ -22,7 +23,10 @@ function Layout(props) {
                           alignItems="center" p={2}>
                     <Flex minWidth='max-content' alignItems='center' gap='2'>
                         <Box p='2'>
-                            <Image src="/images/logo.png"/>
+
+                            <Link to="/">
+                                <Image src="/images/logo.png" />
+                            </Link>
                         </Box>
                         <Spacer/>
                         <ButtonGroup gap='2'>
