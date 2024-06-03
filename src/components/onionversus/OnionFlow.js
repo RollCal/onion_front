@@ -1,28 +1,16 @@
 import React, {useCallback, useEffect} from 'react';
 import axios from "axios";
 import ReactFlow, {Controls, MiniMap, useEdgesState, useNodesState} from "reactflow";
-import {useNavigate} from "react-router";
 
 function OnionFlow(props) {
     const [nodes, setNodes, onNodesChange] = useNodesState([]);
     const [edges, setEdges] = useEdgesState([]);
-    const navigate = useNavigate()
 
-    const getOnionNodes = useCallback((onion_id, type = "purple", new_node_list = [], new_edge_list = []) => {
+    // 자식 노드 생성
+    const getOnionChildNodes = useCallback((onion_id, new_node_list = [], new_edge_list = []) => {
         axios.get(`/api/onions/onionvisualize/${onion_id}`)
             .then(function (response) {
                 const onion = response.data;
-
-                let loc_number = 1;
-                let sourcePosition = 'left';
-                let targetPosition = 'right';
-
-                if (type !== "purple") {
-                    loc_number = -1;
-                    sourcePosition = 'right';
-                    targetPosition = 'left';
-                }
-
                 if (onion.parent_onion) {
                     const newEdge = {
                         id: `e${onion.id}-${onion.parent_onion}`,
@@ -37,10 +25,10 @@ function OnionFlow(props) {
 
                 const newNode = {
                     id: onion.id.toString(),
-                    sourcePosition: sourcePosition,
-                    targetPosition: targetPosition,
+                    sourcePosition: 'left',
+                    targetPosition: 'right',
                     data: {label: onion.title},
-                    position: {x: 200 * new_node_list.length * loc_number + (200 * loc_number), y: 0},
+                    position: {x: 200 * new_node_list.length, y: 0},
                 };
 
                 new_node_list.push(newNode);
@@ -48,22 +36,23 @@ function OnionFlow(props) {
 
 
                 if (onion.next) {
-                    getOnionNodes(onion.next.id, type, new_node_list, new_edge_list);
+                    getOnionChildNodes(onion.next.id, new_node_list, new_edge_list);
                 }
             })
             .catch(function (error) {
                 console.error(error);
             });
-    }, []);
+    }, [setEdges, setNodes]);
 
     useEffect(() => {
-        getOnionNodes(props.onion_id);
-    }, [getOnionNodes]);
+        getOnionChildNodes(props.onion_id);
+    }, [getOnionChildNodes, props.onion_id]);
 
     const defaultViewport = { x: 200, y: 150, zoom: 1};
 
+    // 노드 클릭시 댓글 목록 렌더링
     const onNodeClick = (event, node) => {
-        navigate(`/onion/${node.id}`);
+        props.getVersusComment(node.id).then((data => props.setOnionList(data)));
     }
 
     return (

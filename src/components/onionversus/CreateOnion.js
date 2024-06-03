@@ -5,12 +5,10 @@ import axios from "axios";
 
 function CreateOnion(props) {
     const OnionCreateButtonHandler = () => {
-
-
-        // 테스트용###################3
-
-        const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE3NDA4NzkzLCJpYXQiOjE3MTczOTc5OTMsImp0aSI6IjZjOTIzNWI1YmFhZTQzYTc4ODgwOTA5ZWEwNGU5OGM4IiwidXNlcl9pZCI6MX0.sHGwk2xBb415N5FSqbGx_IIBlNaWlBurE9vl1vOqJqg';
-
+        // 로컬스토리지에서 토큰 가져오기
+        // const token = localStorage.getItem("token");
+        const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE3NDM1MzQzLCJpYXQiOjE3MTc0MjQ1NDMsImp0aSI6IjNlYTc5OWVmYWEzYTQzZGViZWNlMjI1OTZjZjNkMjc2IiwidXNlcl9pZCI6MX0.6p4_1PWfQj73-1pJoCoTrR0cxY4VEerTDeB2VFF1-tI";
+        // 헤더에 넣기
         const config = {
             headers: {
                 'Content-Type': 'application/json',
@@ -27,7 +25,7 @@ function CreateOnion(props) {
         }, config)
             .then(function (response) {
                 // 부모노드에서 함수 가져오기
-                props.setOnionList(response.data);
+                props.setOnionList(preOnionList => [...preOnionList, response.data]);
                 // 입력값 초기화
                 document.getElementById("onion_title").value="";
                 document.getElementById("onion_color").selectedIndex = 0;
