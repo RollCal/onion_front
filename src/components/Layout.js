@@ -1,6 +1,5 @@
 import React from 'react';
 import {Box, Button, ButtonGroup, Flex, Grid, GridItem, Image, Spacer} from '@chakra-ui/react'
-import OnionVersus from "./onionversus/OnionVersus";
 import {Link} from "react-router-dom";
 
 function Layout(props) {
@@ -30,8 +29,8 @@ function Layout(props) {
                         </Box>
                         <Spacer/>
                         <ButtonGroup gap='2'>
-                            <Button colorScheme='teal' bgColor="#F24822">Sign Up</Button>
-                            <Button colorScheme='teal' bgColor="#9747FF">Log in</Button>
+                            <Button colorScheme='orange' bgColor="#F24822">Sign Up</Button>
+                            <Button colorScheme='purple'>Log in</Button>
                         </ButtonGroup>
                     </Flex>
                 </GridItem>
