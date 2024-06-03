@@ -9,15 +9,17 @@ function OnionVersusFlow(prop) {
     const [edges, setEdges] = useEdgesState([]);
     const navigate = useNavigate()
 
+    // 최상위 노드 생성
     const getVersusNodes = useCallback((versus_data) => {
         const orange_onion = versus_data.orange_onion
         const purple_onion = versus_data.purple_onion;
 
+        // 하위 노드 생성
         getNextNodes(orange_onion.id, "orange");
         getNextNodes(purple_onion.id);
     }, []);
 
-
+    // 하위 노드 생성 함수
     const getNextNodes = useCallback((onion_id, type = "purple", new_node_list = [], new_edge_list = []) => {
         axios.get(`/api/onions/onionvisualize/${onion_id}`)
             .then(function (response) {
@@ -73,6 +75,8 @@ function OnionVersusFlow(prop) {
 
     const defaultViewport = { x: 450, y: 150, zoom: 1};
 
+
+    // 노드 상세 페이지 이동
     const onNodeClick = (event, node) => {
         navigate(`/onion/${node.id}`);
     }

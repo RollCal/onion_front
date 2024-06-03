@@ -9,7 +9,7 @@ function OnionVersus(props) {
 
     async function getVersusList() {
         try {
-            const response = await axios.get('/api/onions/onionlist');
+            const response = await axios.get('/api/onions/onionlist?order=popular&page=1');
             return response.data;
         } catch (error) {
             console.error(error);
@@ -26,6 +26,7 @@ function OnionVersus(props) {
         <div>
             {
                 versusList.map(item => (
+                    /* 다이어그램 생성 */
                     <OnionVersusFlow versus_data={item} key={item.id}/>
                 ))
             }
