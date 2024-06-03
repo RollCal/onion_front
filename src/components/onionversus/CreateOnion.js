@@ -5,12 +5,10 @@ import axios from "axios";
 
 function CreateOnion(props) {
     const OnionCreateButtonHandler = () => {
-
-
-        // 테스트용###################3
-
-        const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE3NDA4NzkzLCJpYXQiOjE3MTczOTc5OTMsImp0aSI6IjZjOTIzNWI1YmFhZTQzYTc4ODgwOTA5ZWEwNGU5OGM4IiwidXNlcl9pZCI6MX0.sHGwk2xBb415N5FSqbGx_IIBlNaWlBurE9vl1vOqJqg';
-
+        // 로컬스토리지에서 토큰 가져오기
+        // const token = localStorage.getItem("token");
+        const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE3NDE5NjA5LCJpYXQiOjE3MTc0MDg4MDksImp0aSI6ImNiNGMyNGNlOTk5NzQzMTBhODJhZmQ1NjRjMDlkZmMyIiwidXNlcl9pZCI6MX0.gGD4GtgyN1hD4pW_w8G7pWkM7oWLR9SQOmRmh_8HuFc";
+        // 헤더에 넣기
         const config = {
             headers: {
                 'Content-Type': 'application/json',
