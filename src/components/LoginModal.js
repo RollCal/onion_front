@@ -35,15 +35,22 @@ function LoginModal({ onLogin }) {
             });
 
             if (response.status === 200) {
+                const { access, refresh } = response.data; // 속성 이름 변경
+                console.log('Server Response:', response.data);
+                console.log('Access Token:', access); // 이제 access 토큰 출력
+                console.log('Refresh Token:', refresh); // 이제 refresh 토큰 출력
+
                 // 로그인 성공, 토큰 저장
-                localStorage.setItem('token', response.data.token);
-                localStorage.setItem('username', response.data.username);
-                onLogin(response.data.token);
+                localStorage.setItem('token', access); // access 토큰 저장
+                localStorage.setItem('refresh', refresh); // refresh 토큰 저장
+                onLogin(access); // access 토큰 전달
                 onClose();
             } else {
                 // 로그인 실패
                 setError(response.data.message || 'Failed to log in');
             }
+
+
         } catch (error) {
             console.error('Error during login:', error);
             setError(error.response?.data?.message || 'An unexpected error occurred');
@@ -68,7 +75,7 @@ function LoginModal({ onLogin }) {
                         )}
                         <FormControl id="username">
                             <FormLabel>Username</FormLabel>
-                            <Input type="username" value={username} onChange={(e) => setUsername(e.target.value)} />
+                            <Input type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
                         </FormControl>
                         <FormControl id="password" mt={4}>
                             <FormLabel>Password</FormLabel>

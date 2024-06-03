@@ -22,6 +22,7 @@ function Header() {
         setIsLoggedIn(false);
     };
 
+
     return (
         <Flex as="header" p={4} bg="teal.500" backgroundColor={"white"} justifyContent="space-between">
             <Box><Image src="/images/logo.png" /></Box>
