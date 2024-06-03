@@ -1,24 +1,14 @@
-import React, {useEffect, useCallback} from 'react';
-import ReactFlow, { Controls, MiniMap, useEdgesState, useNodesState} from 'reactflow';
-import 'reactflow/dist/style.css';
+import React, {useCallback, useEffect} from 'react';
 import axios from "axios";
+import ReactFlow, {Controls, MiniMap, useEdgesState, useNodesState} from "reactflow";
 import {useNavigate} from "react-router";
 
-function OnionVersusFlow(prop) {
+function OnionFlow(props) {
     const [nodes, setNodes, onNodesChange] = useNodesState([]);
     const [edges, setEdges] = useEdgesState([]);
     const navigate = useNavigate()
 
-    const getVersusNodes = useCallback((versus_data) => {
-        const orange_onion = versus_data.orange_onion
-        const purple_onion = versus_data.purple_onion;
-
-        getNextNodes(orange_onion.id, "orange");
-        getNextNodes(purple_onion.id);
-    }, []);
-
-
-    const getNextNodes = useCallback((onion_id, type = "purple", new_node_list = [], new_edge_list = []) => {
+    const getOnionNodes = useCallback((onion_id, type = "purple", new_node_list = [], new_edge_list = []) => {
         axios.get(`/api/onions/onionvisualize/${onion_id}`)
             .then(function (response) {
                 const onion = response.data;
@@ -58,7 +48,7 @@ function OnionVersusFlow(prop) {
 
 
                 if (onion.next) {
-                    getNextNodes(onion.next.id, type, new_node_list, new_edge_list);
+                    getOnionNodes(onion.next.id, type, new_node_list, new_edge_list);
                 }
             })
             .catch(function (error) {
@@ -66,12 +56,11 @@ function OnionVersusFlow(prop) {
             });
     }, []);
 
-
     useEffect(() => {
-        getVersusNodes(prop.versus_data);
-    }, [getVersusNodes]);
+        getOnionNodes(props.onion_id);
+    }, [getOnionNodes]);
 
-    const defaultViewport = { x: 450, y: 150, zoom: 1};
+    const defaultViewport = { x: 200, y: 150, zoom: 1};
 
     const onNodeClick = (event, node) => {
         navigate(`/onion/${node.id}`);
@@ -93,4 +82,4 @@ function OnionVersusFlow(prop) {
     );
 }
 
-export default OnionVersusFlow;
+export default OnionFlow;
