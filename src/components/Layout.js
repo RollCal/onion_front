@@ -1,10 +1,14 @@
 import React, {useEffect, useState} from 'react';
-import {Box, Button, ButtonGroup, Flex, Grid, GridItem, Image, Spacer} from '@chakra-ui/react'
+import {Box, Button, ButtonGroup, Divider, Flex, Grid, GridItem, Image, Spacer, Tooltip} from '@chakra-ui/react'
 import {Link} from "react-router-dom";
 import SignUpModal from "./SignUpModal";
 import LoginModal from "./LoginModal";
+import {AddIcon} from '@chakra-ui/icons'
+import {useNavigate} from "react-router";
 
 function Layout(props) {
+
+    const navigate = useNavigate();
 
     const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -49,20 +53,30 @@ function Layout(props) {
                         </Link>
                     </Box>
                     <Spacer/>
-                        <Box>
-                            {isLoggedIn ? (
-                                <Button variant="ghost" onClick={handleLogout}>
+                    <Box>
+                        {isLoggedIn ? (
+                            <ButtonGroup gap='2'>
+                                <Tooltip label='Create Onion Versus'>
+                                    <Button color="#F24822" border='2px' borderColor='#F24822'
+                                            bgColor="white" onClick={() => {
+                                        navigate("/versus/create");
+                                    }}>
+                                        <AddIcon/>
+                                    </Button>
+                                </Tooltip>
+                                <Button color="purple" border='2px' borderColor='purple' onClick={handleLogout}>
                                     Log out
                                 </Button>
-                            ) : (
-                                <>
-                                    <ButtonGroup gap='2'>
+                            </ButtonGroup>
+                        ) : (
+                            <>
+                                <ButtonGroup gap='2'>
                                     <SignUpModal/>
                                     <LoginModal onLogin={handleLogin}/>
-                                    </ButtonGroup>
-                                </>
-                            )}
-                        </Box>
+                                </ButtonGroup>
+                            </>
+                        )}
+                    </Box>
                 </Flex>
             </GridItem>
             <GridItem pl='2' bg='white' area={'main'} display="flex" alignItems="center"
