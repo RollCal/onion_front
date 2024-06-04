@@ -6,8 +6,7 @@ import axios from "axios";
 function CreateOnion(props) {
     const OnionCreateButtonHandler = () => {
         // 로컬스토리지에서 토큰 가져오기
-        // const token = localStorage.getItem("token");
-        const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE3NDkxNDY3LCJpYXQiOjE3MTc0ODA2NjcsImp0aSI6IjcwNzJkMWQ5ZWZjYTQxNGE4M2E2MDRlMWIzZjRjODExIiwidXNlcl9pZCI6MX0.Y0ECI02wkecnb_Kp0Fna1xusgGo9otbM2LQJ7fZ_GXU";
+        const token = localStorage.getItem("token");
         // 헤더에 넣기
         const config = {
             headers: {
@@ -16,6 +15,7 @@ function CreateOnion(props) {
             }
         };
 
+        console.log("토큰!!!",token);
         // 테스트용###################3
 
 

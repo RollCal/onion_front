@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect} from 'react';
 import axios from "axios";
-import ReactFlow, {Controls, MiniMap, useEdgesState, useNodesState} from "reactflow";
+import ReactFlow, {Controls, useEdgesState, useNodesState} from "reactflow";
 
 function OnionFlow(props) {
     const [nodes, setNodes, onNodesChange] = useNodesState([]);
@@ -27,9 +27,28 @@ function OnionFlow(props) {
                     id: onion.id.toString(),
                     sourcePosition: 'left',
                     targetPosition: 'right',
-                    data: {label: onion.title},
+                    data: {label: onion.title, onion_color: onion.color},
                     position: {x: 200 * new_node_list.length, y: 0},
                 };
+
+                if (Number(props.onion_id) === onion.id) {
+                    newNode.style = {
+                        backgroundColor: "#A75D36",
+                        color: "white"
+                    }
+                } else {
+                    if (onion.color === "Purple") {
+                        newNode.style = {
+                            backgroundColor: "#9747FF",
+                            color: "white"
+                        }
+                    } else {
+                        newNode.style = {
+                            backgroundColor: "#F24822",
+                            color: "white"
+                        }
+                    }
+                }
 
                 new_node_list.push(newNode);
                 setNodes(prevNodes => [...prevNodes, newNode]);
@@ -69,7 +88,7 @@ function OnionFlow(props) {
                                 sourcePosition: 'left',
                                 targetPosition: 'right',
                                 data: {label: onion.title},
-                                position: {x: 200 * new_node_list.length * -1 -200, y: 0},
+                                position: {x: 200 * new_node_list.length * -1 - 200, y: 0},
                             };
 
                             new_node_list.push(newNode);
@@ -97,17 +116,37 @@ function OnionFlow(props) {
         getOnionParentNodes(props.onion_id);
     }, [getOnionChildNodes, getOnionParentNodes, props.onion_id]);
 
-    const defaultViewport = {x: 200, y: 150, zoom: 1};
+    const defaultViewport = {x: 200, y: 250, zoom: 1};
 
     // 노드 클릭시 댓글 목록 렌더링
     const onNodeClick = (event, node) => {
         props.getVersusComment(node.id).then((data => props.setOnionList(data)));
+        setNodes((nodes) =>
+            nodes.map((item) => {
+                if (item.id === node.id) {
+                    item.style = {...item.style, backgroundColor: "#A75D36", color: "white"};
+                } else {
+                    if (item.data.onion_color === "Purple") {
+                        item.style = {
+                            backgroundColor: "#9747FF",
+                            color: "white"
+                        }
+                    } else {
+                        item.style = {
+                            backgroundColor: "#F24822",
+                            color: "white"
+                        }
+                    }
+                }
+                return item;
+            })
+        );
     }
 
     return (
         <div style={{
-            width: '1000px',
-            height: '300px',
+            width: '1500px',
+            height: '500px',
             border: '2px solid',
             marginTop: "10px",
             marginBottom: "10px",
@@ -121,7 +160,6 @@ function OnionFlow(props) {
                 defaultViewport={defaultViewport}
                 onNodeClick={onNodeClick}
             >
-                <MiniMap/>
                 <Controls/>
             </ReactFlow>
         </div>
