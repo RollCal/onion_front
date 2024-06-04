@@ -27,8 +27,11 @@ function CreateVersus(props) {
             }
         };
 
+        // input title 에서 가져오기
         const versus_title = document.getElementById("versus_title").value;
+        // input orange_title에서 가져오기
         const orange_title = document.getElementById("orange_title").value;
+        // input purple_title에서 가져오기
         const purple_title = document.getElementById("purple_title").value;
 
         axios.post("/api/onions/onionlist/", {
