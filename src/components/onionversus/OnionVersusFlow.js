@@ -1,5 +1,5 @@
 import React, {useEffect, useCallback} from 'react';
-import ReactFlow, { Controls, MiniMap, useEdgesState, useNodesState} from 'reactflow';
+import ReactFlow, {Controls, MiniMap, useEdgesState, useNodesState} from 'reactflow';
 import 'reactflow/dist/style.css';
 import axios from "axios";
 import {useNavigate} from "react-router";
@@ -55,6 +55,18 @@ function OnionVersusFlow(prop) {
                     position: {x: 200 * new_node_list.length * loc_number + (200 * loc_number), y: 0},
                 };
 
+                if (onion.color === "Purple") {
+                    newNode.style = {
+                        backgroundColor: "#9747FF",
+                        color: "white"
+                    }
+                } else {
+                    newNode.style = {
+                        backgroundColor: "#F24822",
+                        color: "white"
+                    }
+                }
+
                 new_node_list.push(newNode);
                 setNodes(prevNodes => [...prevNodes, newNode]);
 
@@ -72,7 +84,7 @@ function OnionVersusFlow(prop) {
         getVersusNodes(prop.versus_data);
     }, [getVersusNodes]);
 
-    const defaultViewport = { x: 450, y: 150, zoom: 1};
+    const defaultViewport = {x: 450, y: 150, zoom: 1};
 
 
     // 노드 상세 페이지 이동
@@ -81,7 +93,15 @@ function OnionVersusFlow(prop) {
     }
 
     return (
-        <div style={{width: '1000px', height: '300px', border: '2px solid', marginTop: "10px", marginBottom: "10px", borderRadius: "10px", borderColor: "lightgrey"}}>
+        <div style={{
+            width: '1000px',
+            height: '300px',
+            border: '2px solid',
+            marginTop: "10px",
+            marginBottom: "10px",
+            borderRadius: "10px",
+            borderColor: "lightgrey"
+        }}>
             <ReactFlow
                 nodes={nodes}
                 edges={edges}
