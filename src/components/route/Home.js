@@ -5,9 +5,11 @@ import OnionVersus from "../onionversus/OnionVersus";
 function Home(props) {
     return (
         <Layout>
-            <OnionVersus/>
+            <div style={{display: 'flex', justifyContent: 'center'}}>
+                <OnionVersus/>
+            </div>
         </Layout>
-    );
+);
 }
 
 export default Home;

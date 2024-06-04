@@ -6,7 +6,9 @@ function Detail(props) {
 
     return (
         <Layout>
-            <Onions/>
+            <div style={{display: 'flex', justifyContent: 'center'}}>
+                <Onions/>
+            </div>
         </Layout>
     );
 }
