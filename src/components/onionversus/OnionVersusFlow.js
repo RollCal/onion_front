@@ -5,7 +5,7 @@ import axios from "axios";
 import {useNavigate} from "react-router";
 
 function OnionVersusFlow(prop) {
-    const [nodes, setNodes, onNodesChange] = useNodesState([]);
+    const [nodes, setNodes] = useNodesState([]);
     const [edges, setEdges] = useEdgesState([]);
     const navigate = useNavigate()
 
@@ -52,7 +52,7 @@ function OnionVersusFlow(prop) {
                     sourcePosition: sourcePosition,
                     targetPosition: targetPosition,
                     data: {label: onion.title},
-                    position: {x: 200 * new_node_list.length * loc_number + (200 * loc_number), y: 0},
+                    position: {x: 200 * new_node_list.length * loc_number + (100 * loc_number), y: 0},
                 };
 
                 if (onion.color === "Purple") {
@@ -94,7 +94,7 @@ function OnionVersusFlow(prop) {
 
     return (
         <div style={{
-            width: '1000px',
+            width: '70vw',
             height: '300px',
             border: '2px solid',
             marginTop: "10px",
@@ -105,11 +105,9 @@ function OnionVersusFlow(prop) {
             <ReactFlow
                 nodes={nodes}
                 edges={edges}
-                onNodesChange={onNodesChange}
                 defaultViewport={defaultViewport}
                 onNodeClick={onNodeClick}
             >
-                <MiniMap/>
                 <Controls/>
             </ReactFlow>
         </div>

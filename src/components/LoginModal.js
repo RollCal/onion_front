@@ -59,7 +59,7 @@ function LoginModal({ onLogin }) {
 
     return (
         <>
-            <Button colorScheme='teal' bgColor="#9747FF" onClick={onOpen}>Log in</Button>
+            <Button colorScheme='purple' onClick={onOpen}>Log in</Button>
 
             <Modal isOpen={isOpen} onClose={onClose}>
                 <ModalOverlay />

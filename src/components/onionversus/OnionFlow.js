@@ -87,9 +87,21 @@ function OnionFlow(props) {
                                 id: onion.id.toString(),
                                 sourcePosition: 'left',
                                 targetPosition: 'right',
-                                data: {label: onion.title},
+                                data: {label: onion.title, onion_color: onion.color},
                                 position: {x: 200 * new_node_list.length * -1 - 200, y: 0},
                             };
+
+                            if (onion.color === "Purple") {
+                                newNode.style = {
+                                    backgroundColor: "#9747FF",
+                                    color: "white"
+                                }
+                            } else {
+                                newNode.style = {
+                                    backgroundColor: "#F24822",
+                                    color: "white"
+                                }
+                            }
 
                             new_node_list.push(newNode);
                             setNodes(prevNodes => [...prevNodes, newNode]);
@@ -145,7 +157,7 @@ function OnionFlow(props) {
 
     return (
         <div style={{
-            width: '1500px',
+            width: '70vw',
             height: '500px',
             border: '2px solid',
             marginTop: "10px",

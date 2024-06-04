@@ -14,8 +14,6 @@ function CreateOnion(props) {
                 'Authorization': `Bearer ${token}`
             }
         };
-
-        console.log("토큰!!!",token);
         // 테스트용###################3
 
 
