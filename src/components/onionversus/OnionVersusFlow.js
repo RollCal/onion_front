@@ -68,7 +68,6 @@ function OnionVersusFlow(prop) {
             });
     }, []);
 
-
     useEffect(() => {
         getVersusNodes(prop.versus_data);
     }, [getVersusNodes]);

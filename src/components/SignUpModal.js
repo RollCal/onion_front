@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import {
     Modal,
     ModalOverlay,
@@ -12,117 +13,107 @@ import {
     FormControl,
     FormLabel,
     Input,
-    RadioGroup,
-    Radio,
-    Stack,
-    useToast
+    Alert,
+    AlertIcon
 } from '@chakra-ui/react';
-import axios from 'axios';
 
-function SignUpModal() {
+function RegisterModal({ onRegister }) {
     const { isOpen, onOpen, onClose } = useDisclosure();
-    const toast = useToast();
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [password2, setPassword2] = useState('');
+    const [email, setEmail] = useState('');
+    const [nickname, setNickname] = useState('');
+    const [gender, setGender] = useState('');
+    const [birth, setBirth] = useState('');
+    const [error, setError] = useState('');
+    const [success, setSuccess] = useState('');
 
-    const [formData, setFormData] = useState({
-        username: '',
-        password: '',
-        email: '',
-        nickname: '',
-        gender: '',
-        birth: ''
-    });
-
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData(prevState => ({
-            ...prevState,
-            [name]: value
-        }));
-    };
-
-    const handleGenderChange = (value) => {
-        setFormData(prevState => ({
-            ...prevState,
-            gender: value
-        }));
-    };
-
-    const handleSubmit = async () => {
+    const handleRegister = async () => {
         try {
-            const response = await axios.post('http://localhost:8000/api/accounts/signup/', formData, {
+            const response = await axios.post('http://localhost:8000/api/accounts/signup/', {
+                username,
+                password,
+                password2,
+                email,
+                nickname,
+                gender,
+                birth
+            }, {
                 headers: {
-                    'Content-Type': 'application/json'
-                }
+                    'Content-Type': 'application/json',
+                },
             });
+
             if (response.status === 201) {
-                toast({
-                    title: "Account created.",
-                    description: "Your account has been created successfully.",
-                    status: "success",
-                    duration: 9000,
-                    isClosable: true,
-                });
+                setSuccess('Registration successful!');
+                onRegister();
                 onClose();
+            } else {
+                setError(response.data.message || 'Failed to register');
             }
         } catch (error) {
-            toast({
-                title: "An error occurred.",
-                description: "Unable to create account.",
-                status: "error",
-                duration: 9000,
-                isClosable: true,
-            });
+            console.error('Error during registration:', error);
+            const errorMessage = error.response?.data || 'An unexpected error occurred';
+            setError(JSON.stringify(errorMessage));
         }
     };
 
     return (
         <>
-            <Button colorScheme='teal' bgColor="#F24822" onClick={onOpen}>Sign Up</Button>
+            <Button colorScheme='teal' bgColor="#9747FF" onClick={onOpen}>Sign up</Button>
 
             <Modal isOpen={isOpen} onClose={onClose}>
                 <ModalOverlay />
                 <ModalContent>
-                    <ModalHeader>Sign Up</ModalHeader>
+                    <ModalHeader>Sign up</ModalHeader>
                     <ModalCloseButton />
                     <ModalBody>
-                        <FormControl id="username" mb={4}>
+                        {error && (
+                            <Alert status="error" mb={4}>
+                                <AlertIcon />
+                                {error}
+                            </Alert>
+                        )}
+                        {success && (
+                            <Alert status="success" mb={4}>
+                                <AlertIcon />
+                                {success}
+                            </Alert>
+                        )}
+                        <FormControl id="username">
                             <FormLabel>Username</FormLabel>
-                            <Input type="text" name="username" value={formData.username} onChange={handleChange} />
+                            <Input type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
                         </FormControl>
-                        <FormControl id="password" mb={4}>
-                            <FormLabel>Password</FormLabel>
-                            <Input type="password" name="password" value={formData.password} onChange={handleChange} />
-                        </FormControl>
-                        <FormControl id="confirmPassword" mb={4}>
-                            <FormLabel>Confirm Password</FormLabel>
-                            <Input type="password" name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} />
-                        </FormControl>
-                        <FormControl id="email" mb={4}>
+                        <FormControl id="email" mt={4}>
                             <FormLabel>Email</FormLabel>
-                            <Input type="email" name="email" value={formData.email} onChange={handleChange} />
+                            <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
                         </FormControl>
-                        <FormControl id="nickname" mb={4}>
+                        <FormControl id="nickname" mt={4}>
                             <FormLabel>Nickname</FormLabel>
-                            <Input type="text" name="nickname" value={formData.nickname} onChange={handleChange} />
+                            <Input type="text" value={nickname} onChange={(e) => setNickname(e.target.value)} />
                         </FormControl>
-                        <FormControl id="gender" mb={4}>
+                        <FormControl id="gender" mt={4}>
                             <FormLabel>Gender</FormLabel>
-                            <RadioGroup name="gender" value={formData.gender} onChange={handleGenderChange}>
-                                <Stack direction="row">
-                                    <Radio value="M">Male</Radio>
-                                    <Radio value="F">Female</Radio>
-                                </Stack>
-                            </RadioGroup>
+                            <Input type="text" value={gender} onChange={(e) => setGender(e.target.value)} />
                         </FormControl>
-                        <FormControl id="birth" mb={4}>
-                            <FormLabel>Birth Date</FormLabel>
-                            <Input type="date" name="birth" value={formData.birth} onChange={handleChange} />
+                        <FormControl id="birth" mt={4}>
+                            <FormLabel>Birth</FormLabel>
+                            <Input type="date" value={birth} onChange={(e) => setBirth(e.target.value)} />
+                        </FormControl>
+                        <FormControl id="password" mt={4}>
+                            <FormLabel>Password</FormLabel>
+                            <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+                        </FormControl>
+                        <FormControl id="password2" mt={4}>
+                            <FormLabel>Confirm Password</FormLabel>
+                            <Input type="password" value={password2} onChange={(e) => setPassword2(e.target.value)} />
                         </FormControl>
                     </ModalBody>
 
                     <ModalFooter>
-                        <Button colorScheme="blue" mr={3} onClick={handleSubmit}>
-                            Sign Up
+                        <Button colorScheme="blue" mr={3} onClick={handleRegister}>
+                            Sign up
                         </Button>
                         <Button variant="ghost" onClick={onClose}>Cancel</Button>
                     </ModalFooter>
@@ -132,4 +123,4 @@ function SignUpModal() {
     );
 }
 
-export default SignUpModal;
+export default RegisterModal;
