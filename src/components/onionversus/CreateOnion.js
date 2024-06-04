@@ -14,8 +14,6 @@ function CreateOnion(props) {
                 'Authorization': `Bearer ${token}`
             }
         };
-        // 테스트용###################3
-
 
         axios.post(`/api/onions/${props.onion_id}`, {
             title: document.getElementById("onion_title").value,
