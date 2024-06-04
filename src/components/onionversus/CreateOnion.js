@@ -7,7 +7,7 @@ function CreateOnion(props) {
     const OnionCreateButtonHandler = () => {
         // 로컬스토리지에서 토큰 가져오기
         // const token = localStorage.getItem("token");
-        const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE3NDM1MzQzLCJpYXQiOjE3MTc0MjQ1NDMsImp0aSI6IjNlYTc5OWVmYWEzYTQzZGViZWNlMjI1OTZjZjNkMjc2IiwidXNlcl9pZCI6MX0.6p4_1PWfQj73-1pJoCoTrR0cxY4VEerTDeB2VFF1-tI";
+        const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE3NDkxNDY3LCJpYXQiOjE3MTc0ODA2NjcsImp0aSI6IjcwNzJkMWQ5ZWZjYTQxNGE4M2E2MDRlMWIzZjRjODExIiwidXNlcl9pZCI6MX0.Y0ECI02wkecnb_Kp0Fna1xusgGo9otbM2LQJ7fZ_GXU";
         // 헤더에 넣기
         const config = {
             headers: {
