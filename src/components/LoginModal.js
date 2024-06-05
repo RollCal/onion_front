@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
-import { useGlobal } from './GlobalState';
+import { GlobalContext } from './GlobalState'
 import {
     Modal,
     ModalOverlay,
@@ -18,31 +18,13 @@ import {
     AlertIcon
 } from '@chakra-ui/react';
 
-function LoginModal({ onLogin }) {
+function LoginModal() {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
-    const { isLoggedIn, setIsLoggedIn } = useGlobal();
+    const { Login } = useContext(GlobalContext);
 
-    useEffect(() => {
-        const checkLoginStatus = () => {
-            const loginTime = parseInt(localStorage.getItem('loginTime'), 10);
-            const currentTime = new Date().getTime();
-
-            if (currentTime - loginTime > 5000) { // 3분(180,000ms) 이상 경과한 경우
-                localStorage.removeItem('token');
-                localStorage.removeItem('refresh');
-                localStorage.removeItem('loginTime');
-                setIsLoggedIn(false);
-                window.location.reload(); // 페이지 새로고침
-            }
-        };
-
-        checkLoginStatus();
-        const intervalId = setInterval(checkLoginStatus, 3000);
-        return () => clearInterval(intervalId);
-    }, [isLoggedIn]);
 
     const handleLogin = async () => {
         try {
@@ -64,9 +46,9 @@ function LoginModal({ onLogin }) {
                 localStorage.setItem('token', access);
                 localStorage.setItem('refresh', refresh);
                 localStorage.setItem('loginTime', new Date().getTime());
-                onLogin(access);
                 onClose();
-                setIsLoggedIn(true);
+                Login(true);
+                console.log(Login);
             } else {
                 setError(response.data.message || 'Failed to log in');
             }
