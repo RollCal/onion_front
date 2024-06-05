@@ -1,11 +1,12 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import axios from "axios";
 import {useParams} from "react-router";
 import OnionFlow from "./OnionFlow";
 import CreateOnion from "./CreateOnion";
 import {Link} from "react-router-dom";
-import {Box, Button, Flex, Grid, GridItem, Text, Tooltip} from "@chakra-ui/react";
+import {Box, Button, Flex, Tooltip} from "@chakra-ui/react";
 import {FaArrowUp, FaArrowDown} from "react-icons/fa";
+import {GlobalContext} from "../GlobalState";
 
 function Onions(props) {
 
@@ -16,6 +17,10 @@ function Onions(props) {
     const [onion_tiele, setOnion_title] = useState();
     const [onion_color, setOnion_color] = useState();
 
+    const {isLoggedIn} = useContext(GlobalContext)
+
+    const [isVote, setIsVote] = useState(null);
+
     // 댓글 목록 불러오기
     async function getVersusComment(onion_id) {
         try {
@@ -23,19 +28,23 @@ function Onions(props) {
             // 로컬스토리지에서 토큰 가져오기
             const token = localStorage.getItem("token");
             // 헤더에 넣기
-            const config = {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                }
-            };
+            let config = {};
+
+            if (isLoggedIn) {
+                config = {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    }
+                };
+            }
 
             // 댓글 등록 대상 업데이트
             setOnion(onion_id);
-            const response = await axios.get(`/api/onions/${onion_id}`,config);
-            console.log(response.data);
+            const response = await axios.get(`/api/onions/${onion_id}`, config);
             setOnion_title(response.data.title);
             setOnion_color(response.data.color);
+            setIsVote(response.data.voted);
             // 댓글 목록 리턴
             return response.data.children;
         } catch (error) {
@@ -52,13 +61,41 @@ function Onions(props) {
         )
     }
 
-    useEffect(() => {
-        // 처음 렌더링시 route에서 가져온 id 로 댓글 목록 불러오기
-        getVersusComment(param.onion_id).then((data => setOnionList(data)));
-    }, [param.onion_id]); // 목록에있는 데이터들이 변경 될때마나 리랜더링, 공백일때는 무조건 한번 랜더링
-
 
     const upVoteButtonHandler = (onion_id, type) => {
+        // 로컬스토리지에서 토큰 가져오기
+        const token = localStorage.getItem("token");
+        // 헤더에 넣기
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        };
+
+        axios.post("/api/votes/", {
+            onion_id,
+            type
+        }, config)
+            .then(function (response) {
+                if (response.status === 200) {
+                    if (type === "Up") {
+                        setIsVote("Up");
+                    } else {
+                        setIsVote("Down");
+                    }
+                    alert("정상적으로 투표하였습니다.");
+                } else {
+                    setIsVote(null);
+                    alert("투표가 취소되었습니다.");
+                }
+            })
+            .catch(function (erorr) {
+                alert("로그인이 필요합니다!");
+            });
+    }
+
+    const commentVoteButtonHandler = (onion_id, type) => {
         // 로컬스토리지에서 토큰 가져오기
         const token = localStorage.getItem("token");
         // 헤더에 넣기
@@ -80,10 +117,15 @@ function Onions(props) {
                     alert("투표가 취소되었습니다.");
                 }
             })
-            .catch(function () {
+            .catch(function (erorr) {
                 alert("로그인이 필요합니다!");
             });
     }
+
+    useEffect(() => {
+        // 처음 렌더링시 route에서 가져온 id 로 댓글 목록 불러오기
+        getVersusComment(param.onion_id).then((data => setOnionList(data)));
+    }, [param.onion_id, isLoggedIn]); // 목록에있는 데이터들이 변경 될때마나 리랜더링, 공백일때는 무조건 한번 랜더링
 
 
     return (
@@ -96,26 +138,62 @@ function Onions(props) {
             <Box>
                 <Box p={5}>
                     <Flex gap={2}>
-                        <Tooltip label='UP VOTE'>
-                            <Button color={onion_color === "Orange" ? "#F24822" : "#9747FF"} border='2px'
-                                    borderColor={onion_color === "Orange" ? "#F24822" : "#9747FF"} size='md'
-                                    bgColor="white" onClick={() => {
-                                upVoteButtonHandler(onion, "Up")
-                            }}>
-                                {onion_tiele}
-                                <FaArrowUp/>
-                            </Button>
-                        </Tooltip>
-                        <Tooltip label='DOWN VOTE'>
-                            <Button color={onion_color === "Orange" ? "#F24822" : "#9747FF"} border='2px'
-                                    borderColor={onion_color === "Orange" ? "#F24822" : "#9747FF"} size='md'
-                                    bgColor="white" onClick={() => {
-                                upVoteButtonHandler(onion, "Down")
-                            }}>
-                                {onion_tiele}
-                                <FaArrowDown/>
-                            </Button>
-                        </Tooltip>
+                        {
+                            isVote === "Up" ? (
+
+                                    <Tooltip label='UP VOTE'>
+                                        <Button color="white" border='2px'
+                                                borderColor={onion_color === "Orange" ? "#F24822" : "#9747FF"} size='md'
+                                                bgColor={onion_color === "Orange" ? "#F24822" : "#9747FF"}
+                                                onClick={() => {
+                                                    upVoteButtonHandler(onion, "Up")
+                                                }}>
+                                            {onion_tiele}
+                                            <FaArrowUp/>
+                                        </Button>
+                                    </Tooltip>
+                                )
+                                :
+                                (
+                                    <Tooltip label='UP VOTE'>
+                                        <Button color={onion_color === "Orange" ? "#F24822" : "#9747FF"} border='2px'
+                                                borderColor={onion_color === "Orange" ? "#F24822" : "#9747FF"} size='md'
+                                                bgColor="white" onClick={() => {
+                                            upVoteButtonHandler(onion, "Up")
+                                        }}>
+                                            {onion_tiele}
+                                            <FaArrowUp/>
+                                        </Button>
+                                    </Tooltip>
+                                )
+                        }
+                        {
+                            isVote === "Down" ? (
+                                    <Tooltip label='DOWN VOTE'>
+                                        <Button color="white" border='2px'
+                                                borderColor={onion_color === "Orange" ? "#F24822" : "#9747FF"} size='md'
+                                                bgColor={onion_color === "Orange" ? "#F24822" : "#9747FF"} onClick={() => {
+                                            upVoteButtonHandler(onion, "Down")
+                                        }}>
+                                            {onion_tiele}
+                                            <FaArrowDown/>
+                                        </Button>
+                                    </Tooltip>
+                                )
+                                :
+                                (
+                                    <Tooltip label='DOWN VOTE'>
+                                        <Button color={onion_color === "Orange" ? "#F24822" : "#9747FF"} border='2px'
+                                                borderColor={onion_color === "Orange" ? "#F24822" : "#9747FF"} size='md'
+                                                bgColor="white" onClick={() => {
+                                            upVoteButtonHandler(onion, "Down")
+                                        }}>
+                                            {onion_tiele}
+                                            <FaArrowDown/>
+                                        </Button>
+                                    </Tooltip>
+                                )
+                        }
                     </Flex>
                 </Box>
                 <Box>
@@ -127,7 +205,7 @@ function Onions(props) {
                             <Tooltip label='UP VOTE'>
                                 <Button border='2px' size='xs' bgColor="white" marginTop="10px"
                                         onClick={() => {
-                                            upVoteButtonHandler(comment.id, "Up")
+                                            commentVoteButtonHandler(comment.id, "Up")
                                         }}>
                                     <FaArrowUp/>
                                 </Button>
@@ -135,7 +213,7 @@ function Onions(props) {
                             <Tooltip label='DOWN VOTE'>
                                 <Button border='2px' size='xs' bgColor="white" marginTop="10px"
                                         onClick={() => {
-                                            upVoteButtonHandler(comment.id, "Down")
+                                            commentVoteButtonHandler(comment.id, "Down")
                                         }}>
                                     <FaArrowDown/>
                                 </Button>
