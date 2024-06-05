@@ -44,7 +44,7 @@ function CreateVersus(props) {
                 navigate("/");
             })
             .catch(function (error) {
-                console.log(error);
+                alert("로그인이 필요합니다!");
             })
     }
 
