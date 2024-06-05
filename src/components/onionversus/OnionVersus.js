@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import axios from "axios";
 import OnionVersusFlow from "./OnionVersusFlow";
+import {Box} from "@chakra-ui/react";
 
 function OnionVersus(props) {
     const [versusList, setVersusList] = useState([]);
@@ -37,15 +38,13 @@ function OnionVersus(props) {
     }, [loading]);
 
     return (
-        <div>
+        <Box>
             {
                 versusList.map((item, index) => (
                     <OnionVersusFlow versus_data={item} key={index} />
                 ))
             }
-            <div ref={lastItemElementRef}></div>
-            {loading && <p>Loading...</p>}
-        </div>
+        </Box>
     );
 }
 

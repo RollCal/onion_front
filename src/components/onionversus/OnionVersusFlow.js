@@ -3,6 +3,7 @@ import ReactFlow, {Controls, MiniMap, useEdgesState, useNodesState} from 'reactf
 import 'reactflow/dist/style.css';
 import axios from "axios";
 import {useNavigate} from "react-router";
+import {Box, Grid, GridItem} from "@chakra-ui/react";
 
 function OnionVersusFlow(prop) {
     const [nodes, setNodes] = useNodesState([]);
@@ -107,29 +108,67 @@ function OnionVersusFlow(prop) {
         navigate(`/onion/${node.id}`);
     }
 
+    // 투표 그래프 와 versus 제목 레이아웃
+    const VersusInfo = () => {
+        const versus = prop.versus_data;
+        const ov_title = versus.ov_title;
+        const orange_onion_title = versus.orange_onion.title;
+        let orange_up_vote_cnt = 1;
+        if (Number(versus.orange_onion.up_vote_num)) {
+            orange_up_vote_cnt = Number(versus.orange_onion.up_vote_num);
+        }
+        const purple_onion_title = versus.purple_onion.title;
+        let purple_up_vote_cnt = 1;
+        if (Number(versus.purple_onion.up_vote_num)) {
+            purple_up_vote_cnt = Number(versus.purple_onion.up_vote_num);
+        }
+        const total_up_vote_cnt = orange_up_vote_cnt + purple_up_vote_cnt;
+
+        return (
+            <>
+                <Grid>
+                    <GridItem colSpan={1} w='100%' h='10'>
+                        {ov_title}
+                    </GridItem>
+                </Grid>
+                <Grid templateColumns={`repeat(${total_up_vote_cnt}, 1fr)`}>
+                    <GridItem colSpan={orange_up_vote_cnt} w='100%' h='10' bg='#F24822'
+                              color="white" p={2} pl={5}>
+                        {orange_onion_title}
+                    </GridItem>
+                    <GridItem colSpan={purple_up_vote_cnt} w='100%' h='10' bg='#9747FF'
+                              align='right' color="white"
+                              p={2} pr={5}>
+                        {purple_onion_title}
+                    </GridItem>
+                </Grid>
+            </>
+        )
+    }
+
+
     return (
-        <div style={{
-            width: '70vw',
-            height: '500px',
-            border: '2px solid',
-            marginTop: "10px",
-            marginBottom: "10px",
-            borderRadius: "10px",
-            borderColor: "lightgrey",
-            backgroundImage: `url(${process.env.PUBLIC_URL + '/images/logo.png'})`,
-            backgroundRepeat: 'no-repeat',
-            backgroundPosition: '600px',
-            backgroundSize: '20px 20px',
-        }}>
-            <ReactFlow
-                nodes={nodes}
-                edges={edges}
-                defaultViewport={defaultViewport}
-                onNodeClick={onNodeClick}
-            >
-                <Controls/>
-            </ReactFlow>
-        </div>
+        <Box p="10">
+            <VersusInfo/>
+            <div style={{
+                width: '70vw',
+                height: '300px',
+                border: '2px solid',
+                marginTop: "10px",
+                marginBottom: "10px",
+                borderRadius: "10px",
+                borderColor: "lightgrey"
+            }}>
+                <ReactFlow
+                    nodes={nodes}
+                    edges={edges}
+                    defaultViewport={defaultViewport}
+                    onNodeClick={onNodeClick}
+                >
+                    <Controls/>
+                </ReactFlow>
+            </div>
+        </Box>
     );
 }
 

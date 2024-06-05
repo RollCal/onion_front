@@ -1,10 +1,12 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {Box, Button, ButtonGroup, Divider, Flex, Grid, GridItem, Image, Spacer, Tooltip} from '@chakra-ui/react'
+import {Box, Button, ButtonGroup, Text, Flex, Grid, GridItem, Image, Spacer, Tooltip} from '@chakra-ui/react'
 import {Link} from "react-router-dom";
 import SignUpModal from "./SignUpModal";
 import LoginModal from "./LoginModal";
 import {AddIcon} from '@chakra-ui/icons'
 import {useNavigate} from "react-router";
+import {FaSquareGithub} from "react-icons/fa6";
+import { FaGithub } from "react-icons/fa";
 import {GlobalContext} from "./GlobalState";
 
 function Layout(props) {
@@ -103,8 +105,28 @@ function Layout(props) {
                     {props.children}
                 </Flex>
             </GridItem>
-            <GridItem pl='2' bg='white' area={'footer'}>
-                Footer
+            <GridItem bg='white' area={'footer'} align='center' p={10}>
+                <Grid templateColumns="repeat(1, 1fr)" pb="10">
+                    <GridItem>
+                        <Text as="b" fontSize='lg'>Proudly made in '선동과날조 team'</Text>
+                    </GridItem>
+                    <GridItem>
+                        <Tooltip label="ONION_FRONT">
+                            <Button bg="white" onClick={() => {
+                                window.open("https://github.com/RollCal/onion_front");
+                            }}>
+                                <FaSquareGithub size="30px"/>
+                            </Button>
+                        </Tooltip>
+                        <Tooltip label="ONION_BACK">
+                            <Button bg="white" onClick={() => {
+                                window.open("https://github.com/RollCal/onion");
+                            }}>
+                                <FaGithub size="30px"/>
+                            </Button>
+                        </Tooltip>
+                    </GridItem>
+                </Grid>
             </GridItem>
         </Grid>
     );

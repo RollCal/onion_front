@@ -3,7 +3,7 @@ import axios from "axios";
 import ReactFlow, {Controls, useEdgesState, useNodesState} from "reactflow";
 
 function OnionFlow(props) {
-    const [nodes, setNodes, onNodesChange] = useNodesState([]);
+    const [nodes, setNodes] = useNodesState([]);
     const [edges, setEdges] = useEdgesState([]);
 
     // 자식 노드 생성
@@ -218,7 +218,6 @@ function OnionFlow(props) {
             <ReactFlow
                 nodes={nodes}
                 edges={edges}
-                onNodesChange={onNodesChange}
                 defaultViewport={defaultViewport}
                 onNodeClick={onNodeClick}
             >
