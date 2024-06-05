@@ -28,24 +28,45 @@ function OnionFlow(props) {
                     sourcePosition: 'left',
                     targetPosition: 'right',
                     data: {label: onion.title, onion_color: onion.color},
-                    position: {x: 200 * new_node_list.length, y: 0},
+                    position: {x: 400 * new_node_list.length, y: 0},
                 };
 
                 if (Number(props.onion_id) === onion.id) {
                     newNode.style = {
                         backgroundColor: "#A75D36",
-                        color: "white"
+                        color: "white",
+                        height: "200px",
+                        width: "350px",
+                        display: "flex",
+                        justifyContent: "center",
+                        fontSize: "30px",
+                        paddingTop: "70px",
+                        borderRadius: "10px",
                     }
                 } else {
                     if (onion.color === "Purple") {
                         newNode.style = {
                             backgroundColor: "#9747FF",
-                            color: "white"
+                            color: "white",
+                            height: "200px",
+                            width: "350px",
+                            display: "flex",
+                            justifyContent: "center",
+                            fontSize: "30px",
+                            paddingTop: "70px",
+                            borderRadius: "10px",
                         }
                     } else {
                         newNode.style = {
                             backgroundColor: "#F24822",
-                            color: "white"
+                            color: "white",
+                            height: "200px",
+                            width: "350px",
+                            display: "flex",
+                            justifyContent: "center",
+                            fontSize: "30px",
+                            paddingTop: "70px",
+                            borderRadius: "10px",
                         }
                     }
                 }
@@ -88,18 +109,33 @@ function OnionFlow(props) {
                                 sourcePosition: 'left',
                                 targetPosition: 'right',
                                 data: {label: onion.title, onion_color: onion.color},
-                                position: {x: 200 * new_node_list.length * -1 - 200, y: 0},
+                                position: {x: 400 * new_node_list.length * -1 - 200, y: 0},
                             };
 
                             if (onion.color === "Purple") {
                                 newNode.style = {
                                     backgroundColor: "#9747FF",
-                                    color: "white"
+                                    color: "white",
+                                    height: "200px",
+                                    width: "350px",
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    fontSize: "30px",
+                                    paddingTop: "70px",
+                                    borderRadius: "10px",
+
                                 }
                             } else {
                                 newNode.style = {
                                     backgroundColor: "#F24822",
-                                    color: "white"
+                                    color: "white",
+                                    height: "200px",
+                                    width: "350px",
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    fontSize: "30px",
+                                    paddingTop: "70px",
+                                    borderRadius: "10px",
                                 }
                             }
 
@@ -128,7 +164,7 @@ function OnionFlow(props) {
         getOnionParentNodes(props.onion_id);
     }, [getOnionChildNodes, getOnionParentNodes, props.onion_id]);
 
-    const defaultViewport = {x: 200, y: 250, zoom: 1};
+    const defaultViewport = {x: 200, y: 150, zoom: 1};
 
     // 노드 클릭시 댓글 목록 렌더링
     const onNodeClick = (event, node) => {
@@ -141,12 +177,26 @@ function OnionFlow(props) {
                     if (item.data.onion_color === "Purple") {
                         item.style = {
                             backgroundColor: "#9747FF",
-                            color: "white"
+                            color: "white",
+                            height: "200px",
+                            width: "350px",
+                            display: "flex",
+                            justifyContent: "center",
+                            fontSize: "30px",
+                            paddingTop: "70px",
+                            borderRadius: "10px",
                         }
                     } else {
                         item.style = {
                             backgroundColor: "#F24822",
-                            color: "white"
+                            color: "white",
+                            height: "200px",
+                            width: "350px",
+                            display: "flex",
+                            justifyContent: "center",
+                            fontSize: "30px",
+                            paddingTop: "70px",
+                            borderRadius: "10px",
                         }
                     }
                 }

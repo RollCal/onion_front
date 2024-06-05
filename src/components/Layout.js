@@ -1,31 +1,49 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {Box, Button, ButtonGroup, Divider, Flex, Grid, GridItem, Image, Spacer, Tooltip} from '@chakra-ui/react'
 import {Link} from "react-router-dom";
 import SignUpModal from "./SignUpModal";
 import LoginModal from "./LoginModal";
 import {AddIcon} from '@chakra-ui/icons'
 import {useNavigate} from "react-router";
+import {GlobalContext} from "./GlobalState";
 
 function Layout(props) {
 
     const navigate = useNavigate();
 
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+    const {isLoggedIn, Login, Logout} = useContext(GlobalContext)
 
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (token) {
-            setIsLoggedIn(true);
+            Login(true);
         }
     }, []);
 
-    const handleLogin = (token) => {
-        setIsLoggedIn(true);
-    };
+    useEffect(() => {
+        console.log("effect")
+
+        const checkLoginStatus = () => {
+            const loginTime = parseInt(localStorage.getItem('loginTime'), 10);
+            const currentTime = new Date().getTime();
+            console.log(currentTime, loginTime)
+            if (isLoggedIn && (!loginTime || currentTime - loginTime > 3 * 60 * 60 * 1000)) { // 3시간 경과
+                localStorage.removeItem('loginTime');
+                localStorage.removeItem('token');
+                localStorage.removeItem('refresh');
+                Logout();
+            }
+        };
+
+        const intervalId = setInterval(checkLoginStatus, 60 * 1000); // 3초마다 상태 체크
+        return () => clearInterval(intervalId); // 컴포넌트 언마운트 시 인터벌 정지
+    }, [isLoggedIn]);
+
 
     const handleLogout = () => {
         localStorage.removeItem('token');
-        setIsLoggedIn(false);
+        Logout();
     };
 
 
@@ -72,7 +90,7 @@ function Layout(props) {
                             <>
                                 <ButtonGroup gap='2'>
                                     <SignUpModal/>
-                                    <LoginModal onLogin={handleLogin}/>
+                                    <LoginModal/>
                                 </ButtonGroup>
                             </>
                         )}

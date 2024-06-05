@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
+import { GlobalContext } from './GlobalState'
 import {
     Modal,
     ModalOverlay,
@@ -17,11 +18,13 @@ import {
     AlertIcon
 } from '@chakra-ui/react';
 
-function LoginModal({ onLogin }) {
+function LoginModal() {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const { Login } = useContext(GlobalContext);
+
 
     const handleLogin = async () => {
         try {
@@ -35,21 +38,20 @@ function LoginModal({ onLogin }) {
             });
 
             if (response.status === 200) {
-                const { access, refresh } = response.data; // 속성 이름 변경
+                const { access, refresh } = response.data;
                 console.log('Server Response:', response.data);
-                console.log('Access Token:', access); // 이제 access 토큰 출력
-                console.log('Refresh Token:', refresh); // 이제 refresh 토큰 출력
+                console.log('Access Token:', access);
+                console.log('Refresh Token:', refresh);
 
-                // 로그인 성공, 토큰 저장
-                localStorage.setItem('token', access); // access 토큰 저장
-                localStorage.setItem('refresh', refresh); // refresh 토큰 저장
-                onLogin(access); // access 토큰 전달
+                localStorage.setItem('token', access);
+                localStorage.setItem('refresh', refresh);
+                localStorage.setItem('loginTime', new Date().getTime());
                 onClose();
+                Login(true);
+                console.log(Login);
             } else {
-                // 로그인 실패
                 setError(response.data.message || 'Failed to log in');
             }
-
 
         } catch (error) {
             console.error('Error during login:', error);
