@@ -152,7 +152,7 @@ function OnionVersusFlow(prop) {
             <VersusInfo/>
             <div style={{
                 width: '70vw',
-                height: '300px',
+                height: '500px',
                 border: '2px solid',
                 marginTop: "10px",
                 marginBottom: "10px",
