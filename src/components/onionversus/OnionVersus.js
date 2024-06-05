@@ -41,9 +41,10 @@ function OnionVersus(props) {
         <Box>
             {
                 versusList.map((item, index) => (
-                    <OnionVersusFlow versus_data={item} key={index} />
+                    <OnionVersusFlow versus_data={item} key={index}/>
                 ))
             }
+            <div ref={lastItemElementRef}></div>
         </Box>
     );
 }
