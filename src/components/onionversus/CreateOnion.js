@@ -27,7 +27,6 @@ function CreateOnion(props) {
                 document.getElementById("onion_color").selectedIndex = 0;
             })
             .catch(function (error) {
-                console.log(error);
                 // api에서 가져온 데이터로 에러 메세지 생성
                 alert(`[Error]\nMessage : ${error.message}\nDetail : ${error.response.data.detail}`);
             });

@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import axios from "axios";
 import OnionVersusFlow from "./OnionVersusFlow";
+import {Box} from "@chakra-ui/react";
 
 function OnionVersus(props) {
 
@@ -10,7 +11,7 @@ function OnionVersus(props) {
     async function getVersusList() {
         try {
             const response = await axios.get('/api/onions/onionlist?order=popular&page=1');
-            return response.data;
+            return response.data.data;
         } catch (error) {
             console.error(error);
             return [];
@@ -23,14 +24,14 @@ function OnionVersus(props) {
     }, []);
 
     return (
-        <div>
+        <Box>
             {
                 versusList.map(item => (
                     /* 다이어그램 생성 */
                     <OnionVersusFlow versus_data={item} key={item.id}/>
                 ))
             }
-        </div>
+        </Box>
     );
 }
 
