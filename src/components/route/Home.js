@@ -4,10 +4,10 @@ import OnionVersus from "../onionversus/OnionVersus";
 
 function Home(props) {
     return (
-        <Layout>
+        <div style={{display: 'flex', justifyContent: 'center', height: '100vh',}}>
             <OnionVersus/>
-        </Layout>
-    );
+        </div>
+);
 }
 
 export default Home;

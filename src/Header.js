@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {Button, Flex, Box, Image} from '@chakra-ui/react';
 import LoginModal from './components/LoginModal';
 import SignUpModal from "./components/SignUpModal";
+import { GlobalProvider } from './components/GlobalState';
 
 function Header() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -33,8 +34,10 @@ function Header() {
                     </Button>
                 ) : (
                     <>
-                        <SignUpModal />
-                        <LoginModal onLogin={handleLogin} />
+                        <GlobalProvider>
+                            <SignUpModal />
+                            <LoginModal onLogin={handleLogin} />
+                        </GlobalProvider>
                     </>
                 )}
             </Box>
