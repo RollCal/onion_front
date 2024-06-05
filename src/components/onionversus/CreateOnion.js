@@ -15,10 +15,6 @@ function CreateOnion(props) {
             }
         };
 
-        console.log("토큰!!!",token);
-        // 테스트용###################3
-
-
         axios.post(`/api/onions/${props.onion_id}`, {
             title: document.getElementById("onion_title").value,
             color: document.getElementById("onion_color").value

@@ -61,7 +61,7 @@ function RegisterModal({ onRegister }) {
 
     return (
         <>
-            <Button colorScheme='teal' bgColor="#9747FF" onClick={onOpen}>Sign up</Button>
+            <Button colorScheme='orange' bgColor="#F24822" onClick={onOpen}>Sign up</Button>
 
             <Modal isOpen={isOpen} onClose={onClose}>
                 <ModalOverlay />

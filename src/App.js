@@ -4,6 +4,7 @@ import Home from "./components/route/Home";
 import Detail from "./components/route/Detail";
 import Header from "./Header";
 import {GlobalProvider} from "./components/GlobalState";
+import CreateVersus from "./components/route/CreateVersus";
 function App() {
 
     return (
@@ -14,6 +15,7 @@ function App() {
                     <Routes>
                         <Route path="/" element={<Home/>}/>
                         <Route path="onion/:onion_id" element={<Detail />}/>
+                        <Route path="versus/create" element={<CreateVersus />}/>
                     </Routes>
                 </BrowserRouter>
             </GlobalProvider>

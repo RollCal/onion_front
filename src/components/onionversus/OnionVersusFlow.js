@@ -6,7 +6,7 @@ import {useNavigate} from "react-router";
 // import CustomNode from '../../CustomNode.css';
 
 function OnionVersusFlow(prop) {
-    const [nodes, setNodes, onNodesChange] = useNodesState([]);
+    const [nodes, setNodes] = useNodesState([]);
     const [edges, setEdges] = useEdgesState([]);
     const navigate = useNavigate()
 
@@ -110,7 +110,7 @@ function OnionVersusFlow(prop) {
 
     return (
         <div style={{
-            width: '80vw',
+            width: '70vw',
             height: '500px',
             border: '2px solid',
             marginTop: "10px",
@@ -125,11 +125,9 @@ function OnionVersusFlow(prop) {
             <ReactFlow
                 nodes={nodes}
                 edges={edges}
-                onNodesChange={onNodesChange}
                 defaultViewport={defaultViewport}
                 onNodeClick={onNodeClick}
             >
-                <MiniMap/>
                 <Controls/>
             </ReactFlow>
         </div>
