@@ -10,6 +10,7 @@ function OnionVersusFlow(prop) {
     const [edges, setEdges] = useEdgesState([]);
     const navigate = useNavigate()
 
+
     // 최상위 노드 생성
     const getVersusNodes = useCallback((versus_data) => {
         const orange_onion = versus_data.orange_onion
@@ -53,18 +54,32 @@ function OnionVersusFlow(prop) {
                     sourcePosition: sourcePosition,
                     targetPosition: targetPosition,
                     data: {label: onion.title},
-                    position: {x: 200 * new_node_list.length * loc_number + (100 * loc_number), y: 0},
+                    position: {x: 400 * new_node_list.length * loc_number + (200 * loc_number), y: 0},
                 };
 
                 if (onion.color === "Purple") {
                     newNode.style = {
                         backgroundColor: "#9747FF",
-                        color: "white"
+                        color: "white",
+                        height: "200px",
+                        width: "350px",
+                        display: "flex",
+                        justifyContent: "center",
+                        fontSize: "40px",
+                        paddingTop: "70px",
+                        borderRadius: "10px",
                     }
                 } else {
                     newNode.style = {
                         backgroundColor: "#F24822",
-                        color: "white"
+                        color: "white",
+                        height: "200px",
+                        width: "350px",
+                        display: "flex",
+                        justifyContent: "center",
+                        fontSize: "40px",
+                        paddingTop: "70px",
+                        borderRadius: "10px",
                     }
                 }
 
@@ -85,7 +100,7 @@ function OnionVersusFlow(prop) {
         getVersusNodes(prop.versus_data);
     }, [getVersusNodes]);
 
-    const defaultViewport = {x: 450, y: 150, zoom: 1};
+    const defaultViewport = {x: 350, y: 150, zoom: 1};
 
 
     // 노드 상세 페이지 이동
@@ -154,8 +169,7 @@ function OnionVersusFlow(prop) {
                 </ReactFlow>
             </div>
         </Box>
-    )
-        ;
+    );
 }
 
 export default OnionVersusFlow;

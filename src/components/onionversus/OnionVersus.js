@@ -1,16 +1,17 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import axios from "axios";
 import OnionVersusFlow from "./OnionVersusFlow";
 import {Box} from "@chakra-ui/react";
 
 function OnionVersus(props) {
-
-    // 상태 변수 선언
     const [versusList, setVersusList] = useState([]);
+    const [loading] = useState(false);
+    const [page, setPage] = useState(1);
+    const itemsPerPage = 3; // 백엔드에서 반환하는 항목 수에 맞춰 조정
 
-    async function getVersusList() {
+    async function getVersusList(pageNumber) {
         try {
-            const response = await axios.get('/api/onions/onionlist?order=popular&page=1');
+            const response = await axios.get(`/api/onions/onionlist?order=popular&page=${pageNumber}`);
             return response.data.data;
         } catch (error) {
             console.error(error);
@@ -19,16 +20,28 @@ function OnionVersus(props) {
     }
 
     useEffect(() => {
-        // getVersusList 함수 호출 후 결과를 상태 변수에 저장
-        getVersusList().then(data => setVersusList(data));
-    }, []);
+        getVersusList(page).then(data => {
+            setVersusList(prevData => [...prevData,...data]);
+        });
+    }, [page]);
+
+    const observer = useRef();
+    const lastItemElementRef = useCallback(node => {
+        if (loading) return;
+        if (observer.current) observer.current.disconnect();
+        observer.current = new IntersectionObserver(entries => {
+            if (entries[0].isIntersecting) {
+                setPage(prevPage => prevPage + 1);
+            }
+        });
+        if (node) observer.current.observe(node);
+    }, [loading]);
 
     return (
         <Box>
             {
-                versusList.map(item => (
-                    /* 다이어그램 생성 */
-                    <OnionVersusFlow versus_data={item} key={item.id}/>
+                versusList.map((item, index) => (
+                    <OnionVersusFlow versus_data={item} key={index} />
                 ))
             }
         </Box>
