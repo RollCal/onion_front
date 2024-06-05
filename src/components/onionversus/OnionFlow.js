@@ -40,7 +40,7 @@ function OnionFlow(props) {
                         display: "flex",
                         justifyContent: "center",
                         fontSize: "30px",
-                        paddingTop: "30px",
+                        paddingTop: "70px",
                         borderRadius: "10px",
                     }
                 } else {
@@ -53,7 +53,7 @@ function OnionFlow(props) {
                             display: "flex",
                             justifyContent: "center",
                             fontSize: "30px",
-                            paddingTop: "30px",
+                            paddingTop: "70px",
                             borderRadius: "10px",
                         }
                     } else {
@@ -65,7 +65,7 @@ function OnionFlow(props) {
                             display: "flex",
                             justifyContent: "center",
                             fontSize: "30px",
-                            paddingTop: "30px",
+                            paddingTop: "70px",
                             borderRadius: "10px",
                         }
                     }
@@ -115,12 +115,27 @@ function OnionFlow(props) {
                             if (onion.color === "Purple") {
                                 newNode.style = {
                                     backgroundColor: "#9747FF",
-                                    color: "white"
+                                    color: "white",
+                                    height: "200px",
+                                    width: "350px",
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    fontSize: "30px",
+                                    paddingTop: "70px",
+                                    borderRadius: "10px",
+
                                 }
                             } else {
                                 newNode.style = {
                                     backgroundColor: "#F24822",
-                                    color: "white"
+                                    color: "white",
+                                    height: "200px",
+                                    width: "350px",
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    fontSize: "30px",
+                                    paddingTop: "70px",
+                                    borderRadius: "10px",
                                 }
                             }
 
@@ -168,7 +183,7 @@ function OnionFlow(props) {
                             display: "flex",
                             justifyContent: "center",
                             fontSize: "30px",
-                            paddingTop: "30px",
+                            paddingTop: "70px",
                             borderRadius: "10px",
                         }
                     } else {
@@ -180,7 +195,7 @@ function OnionFlow(props) {
                             display: "flex",
                             justifyContent: "center",
                             fontSize: "30px",
-                            paddingTop: "30px",
+                            paddingTop: "70px",
                             borderRadius: "10px",
                         }
                     }

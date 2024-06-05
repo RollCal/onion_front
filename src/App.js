@@ -10,7 +10,6 @@ function App() {
     return (
         <ChakraProvider>
             <GlobalProvider>
-            <Header />
                 <BrowserRouter>
                     <Routes>
                         <Route path="/" element={<Home/>}/>

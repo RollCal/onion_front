@@ -3,7 +3,6 @@ import ReactFlow, {Controls, MiniMap, useEdgesState, useNodesState} from 'reactf
 import 'reactflow/dist/style.css';
 import axios from "axios";
 import {useNavigate} from "react-router";
-// import CustomNode from '../../CustomNode.css';
 
 function OnionVersusFlow(prop) {
     const [nodes, setNodes] = useNodesState([]);
@@ -65,8 +64,8 @@ function OnionVersusFlow(prop) {
                         width: "350px",
                         display: "flex",
                         justifyContent: "center",
-                        fontSize: "30px",
-                        paddingTop: "30px",
+                        fontSize: "40px",
+                        paddingTop: "70px",
                         borderRadius: "10px",
                     }
                 } else {
@@ -77,8 +76,8 @@ function OnionVersusFlow(prop) {
                         width: "350px",
                         display: "flex",
                         justifyContent: "center",
-                        fontSize: "30px",
-                        paddingTop: "30px",
+                        fontSize: "40px",
+                        paddingTop: "70px",
                         borderRadius: "10px",
                     }
                 }
