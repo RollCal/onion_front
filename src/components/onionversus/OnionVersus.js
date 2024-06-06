@@ -7,13 +7,13 @@ function OnionVersus(props) {
     const [loading, setLoading] = useState(false);
     const [page, setPage] = useState(1);
     const [hasMore, setHasMore] = useState(true); // 더 이상 불러올 페이지가 있는지 여부
-
     const itemsPerPage = 3; // 백엔드에서 반환하는 항목 수에 맞춰 조정
+    const [order, setOrder] = useState("popular");
 
     const getVersusList = async (pageNumber) => {
         try {
             setLoading(true);
-            const response = await axios.get(`/api/onions/onionlist?order=popular&search=&page=${pageNumber}`);
+            const response = await axios.get(`/api/onions/onionlist?order=${order}&search=&page=${pageNumber}`);
             setVersusList(prevData => [...prevData,...response.data.data]);
             setHasMore(response.data.meta.num_page > pageNumber); // 페이지 번호가 총 페이지 수보다 작거나 같으면 더 이상 불러올 페이지가 없음
             setLoading(false);
@@ -39,8 +39,19 @@ function OnionVersus(props) {
         if (node) observer.current.observe(node);
     }, [loading, hasMore]);
 
+    const handleOrderChange = (newOrder) => {
+        setOrder(newOrder);
+        setPage(1);
+        setVersusList([]);
+    };
+
     return (
         <div>
+            <div style={{display: "flex",justifyContent: "flex-end"}}>
+                <button onClick={() => handleOrderChange('popular')}>인기순</button>
+                <button onClick={() => handleOrderChange('latest')}>최신순</button>
+                <button onClick={() => handleOrderChange('old')}>날짜순</button>
+            </div>
             {versusList.map((item, index) => (
                 <OnionVersusFlow versus_data={item} key={index} />
             ))}
