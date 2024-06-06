@@ -109,7 +109,7 @@ function OnionFlow(props) {
                                 sourcePosition: 'left',
                                 targetPosition: 'right',
                                 data: {label: onion.title, onion_color: onion.color},
-                                position: {x: 400 * new_node_list.length * -1 - 200, y: 0},
+                                position: {x: 400 * new_node_list.length * -1 - 400, y: 0},
                             };
 
                             if (onion.color === "Purple") {

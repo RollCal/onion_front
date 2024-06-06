@@ -4,10 +4,20 @@ import {useParams} from "react-router";
 import OnionFlow from "./OnionFlow";
 import CreateOnion from "./CreateOnion";
 import {Link} from "react-router-dom";
-import {Box, Button, ButtonGroup, Flex, Spacer, Tooltip} from "@chakra-ui/react";
+import {
+    Box,
+    Button,
+    ButtonGroup,
+    Editable, EditableInput, EditablePreview,
+    Flex,
+    IconButton, Input,
+    Spacer,
+    Tooltip,
+    useEditableControls
+} from "@chakra-ui/react";
 import {FaArrowUp, FaArrowDown} from "react-icons/fa";
 import {GlobalContext} from "../GlobalState";
-import {DeleteIcon, EditIcon} from "@chakra-ui/icons";
+import {CheckIcon, CloseIcon, DeleteIcon, EditIcon} from "@chakra-ui/icons";
 
 function Onions(props) {
 
@@ -15,7 +25,7 @@ function Onions(props) {
 
     const [onionList, setOnionList] = useState([]);
     const [onion, setOnion] = useState();
-    const [onion_tiele, setOnion_title] = useState();
+    const [onion_title, setOnion_title] = useState();
     const [onion_color, setOnion_color] = useState();
     const [onion_writer, setOnion_writer] = useState();
 
@@ -133,33 +143,37 @@ function Onions(props) {
 
         if (!token) {
             alert("로그인이 필요합니다!");
-        }
+        } else {
+            // 헤더에 넣기
+            const config = {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            };
 
-        // 헤더에 넣기
-        const config = {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            }
-        };
-
-        axios.delete(`/api/onions/${onion_id}`,config)
-            .then(function (response) {
-               alert("정상적으로 삭제요청하였습니다!");
-            })
-            .catch(function (error) {
-                if (error.response) {
-                    if (error.response.data.code === 403) {
-                        alert("글 작성자가 아닙니다.");
-                    }else if (error.response.data.code === 400) {
-                        alert("이미 삭제요청하셨습니다.");
-                    }else {
+            axios.delete(`/api/onions/${onion_id}`, config)
+                .then(function (response) {
+                    if (response.data.code === 200) {
+                        alert("정상적으로 삭제되었습니다.");
+                    } else {
+                        alert("삭제기간이지나 관리자에게 삭제요청을 하였습니다");
+                    }
+                })
+                .catch(function (error) {
+                    if (error.response) {
+                        if (error.response.data.code === 403) {
+                            alert("글 작성자가 아닙니다.");
+                        } else if (error.response.data.code === 400) {
+                            alert("이미 삭제요청하셨습니다.");
+                        } else {
+                            alert("서버에서 문제가 발생하였습니다.");
+                        }
+                    } else {
                         alert("서버에서 문제가 발생하였습니다.");
                     }
-                }else {
-                    alert("서버에서 문제가 발생하였습니다.");
-                }
-            });
+                });
+        }
     }
 
     useEffect(() => {
@@ -169,6 +183,109 @@ function Onions(props) {
         });
     }, [param.onion_id, isLoggedIn]); // 목록에있는 데이터들이 변경 될때마나 리랜더링, 공백일때는 무조건 한번 랜더링
 
+    function OnionEditor({onion_title}) {
+
+        return (
+            <Editable
+                textAlign='center'
+                defaultValue={onion_title} // defaultValue를 externalData에 기반하여 설정
+                fontSize='2xl'
+                isPreviewFocusable={false}
+            >
+                <EditablePreview/>
+                {/* 여기서 사용자 정의 입력 */}
+                <Input id="edit_input" as={EditableInput} value={onion_title}/> {/* readOnly로 설정하여 사용자가 직접 수정하지 못하게 */}
+                <EditableControls/>
+            </Editable>
+        );
+    }
+
+
+    function EditableControls(edit_onion_id) {
+        const {
+            isEditing,
+            getSubmitButtonProps,
+            getCancelButtonProps,
+            getEditButtonProps,
+        } = useEditableControls();
+
+        const onionEditButtonHandler = (onion_id) => {
+            // 로컬스토리지에서 토큰 가져오기
+            const token = localStorage.getItem("token");
+
+            if (!token) {
+                alert("로그인이 필요합니다!");
+            } else {
+                // 헤더에 넣기
+                const config = {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    }
+                };
+
+                axios.put(`/api/onions/${onion_id}`, {
+                    title: document.getElementById("edit_input").value
+                }, config)
+                    .then(function (response) {
+                        if (response.data.code === 200) {
+                            alert("정상적으로 수정되었습니다.");
+                            setOnion_title(document.getElementById("edit_input").value);
+                        } else {
+                            alert("수정기간이지나 관리자에게 삭제요청을 하였습니다");
+                            setOnion_title(onion_title+" ");
+                        }
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                        if (error.response) {
+                            if (error.response.data.code === 403) {
+                                alert("글 작성자가 아닙니다.");
+                            } else if (error.response.data.code === 400) {
+                                alert("이미 수정요청하셨습니다.");
+                            } else {
+                                alert("서버에서 문제가 발생하였습니다.");
+                            }
+                            setOnion_title(onion_title+" ");
+                        } else {
+                            alert("서버에서 문제가 발생하였습니다.");
+                            setOnion_title(onion_title+" ");
+                        }
+                    });
+            }
+        }
+
+        const checkIconProps = {
+            ...getSubmitButtonProps(),
+            onClick: (event) => {
+                onionEditButtonHandler(onion);
+            },
+        };
+
+        return isEditing ? (
+            <ButtonGroup justifyContent='center' size='sm'>
+                <IconButton icon={<CheckIcon/>} {...checkIconProps} />
+                <IconButton icon={<CloseIcon/>} {...getCancelButtonProps()} />
+            </ButtonGroup>
+        ) : (
+            <ButtonGroup>
+                <Tooltip label='DELETE ONION'>
+                    <Button border='2px' size='md' bgColor="white" color="red.300"
+                            borderColor="red.300"
+                            marginTop="10px"
+                            onClick={() => {
+                                onionDeleteButtonHandler(onion);
+                            }}>
+                        <DeleteIcon/>
+                    </Button>
+                </Tooltip>
+                <Tooltip label='EDIT ONION'>
+                    <IconButton border='2px' size='md' bgColor="white" color="grey" borderColor="grey"
+                                marginTop="10px" icon={<EditIcon/>} {...getEditButtonProps()} />
+                </Tooltip>
+            </ButtonGroup>
+        );
+    }
 
     return (
         <div>
@@ -194,7 +311,7 @@ function Onions(props) {
                                                         onClick={() => {
                                                             upVoteButtonHandler(onion, "Up")
                                                         }}>
-                                                    {onion_tiele}
+                                                    {onion_title}
                                                     <FaArrowUp/>
                                                 </Button>
                                             </Tooltip>
@@ -209,7 +326,7 @@ function Onions(props) {
                                                         bgColor="white" onClick={() => {
                                                     upVoteButtonHandler(onion, "Up")
                                                 }}>
-                                                    {onion_tiele}
+                                                    {onion_title}
                                                     <FaArrowUp/>
                                                 </Button>
                                             </Tooltip>
@@ -225,7 +342,7 @@ function Onions(props) {
                                                         onClick={() => {
                                                             upVoteButtonHandler(onion, "Down")
                                                         }}>
-                                                    {onion_tiele}
+                                                    {onion_title}
                                                     <FaArrowDown/>
                                                 </Button>
                                             </Tooltip>
@@ -240,7 +357,7 @@ function Onions(props) {
                                                         bgColor="white" onClick={() => {
                                                     upVoteButtonHandler(onion, "Down")
                                                 }}>
-                                                    {onion_tiele}
+                                                    {onion_title}
                                                     <FaArrowDown/>
                                                 </Button>
                                             </Tooltip>
@@ -251,26 +368,7 @@ function Onions(props) {
                         <Spacer/>
                         <Box>
                             <ButtonGroup>
-                                <Tooltip label='DELETE ONION'>
-                                    <Button border='2px' size='md' bgColor="white" color="red.300"
-                                            borderColor="red.300"
-                                            marginTop="10px"
-                                            onClick={() => {
-                                                onionDeleteButtonHandler(onion);
-                                            }}>
-                                        <DeleteIcon/>
-                                    </Button>
-                                </Tooltip>
-                                <Tooltip label='EDIT ONION'>
-                                    <Button border='2px' size='md' bgColor="white" color="grey"
-                                            borderColor="grey"
-                                            marginTop="10px"
-                                            onClick={() => {
-                                                commentVoteButtonHandler(onion, "Down")
-                                            }}>
-                                        <EditIcon/>
-                                    </Button>
-                                </Tooltip>
+                                <OnionEditor onion_title={onion_title}/>
                             </ButtonGroup>
                         </Box>
                     </Flex>
