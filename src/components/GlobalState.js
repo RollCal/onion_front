@@ -11,6 +11,10 @@ export const GlobalProvider = ({ children }) => {
     setIsLoggedIn(true)
   }
   function Logout () {
+    localStorage.removeItem('loginTime');
+    localStorage.removeItem('token');
+    localStorage.removeItem('refresh');
+    localStorage.removeItem('username');
     setIsLoggedIn(false)
   }
 
