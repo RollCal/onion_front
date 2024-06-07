@@ -34,6 +34,7 @@ function Layout(props) {
                 localStorage.removeItem('loginTime');
                 localStorage.removeItem('token');
                 localStorage.removeItem('refresh');
+                localStorage.removeItem('username');
                 Logout();
             }
         };
