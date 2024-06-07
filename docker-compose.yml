@@ -1,0 +1,23 @@
+version: '3.8'
+services:
+  react-app:
+    container_name: react
+    build:
+      context: .
+      target: build
+    volumes:
+      - .:/app
+    command: npm run build
+
+  nginx:
+    container_name: nginx
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    ports:
+      - "80:80"
+    depends_on:
+      - react-app
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
