@@ -35,7 +35,7 @@ function SignUpModal({ onRegister }) {
 
     const handleRegister = async () => {
         try {
-            const response = await axios.post('http://localhost:8000/api/accounts/signup/', {
+            const response = await axios.post('/api/accounts/signup/', {
                 username,
                 password,
                 password2,
@@ -66,7 +66,7 @@ function SignUpModal({ onRegister }) {
 
     const handleSendConfirmEmail = async () => {
         try {
-            const response = await axios.post('http://localhost:8000/api/accounts/confirm/', {
+            const response = await axios.post('/api/accounts/confirm/', {
                 email
             }, {
                 headers: {

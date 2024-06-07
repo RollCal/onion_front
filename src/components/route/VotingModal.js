@@ -4,7 +4,7 @@ import axios from 'axios';
 
 const VotingModal = ({ isOpenOrange, isOpenPurple, onRequestClose, orangeOnion, purpleOnion, onVoteSuccess }) => {
     const handleVote = (onionId, onionTitle) => {
-        axios.post(`http://127.0.0.1:8000/api/votes/`, { onion_id: onionId })
+        axios.post(`/api/votes/`, { onion_id: onionId })
             .then((response) => {
                 onVoteSuccess(onionTitle);
             })
