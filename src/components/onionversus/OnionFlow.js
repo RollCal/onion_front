@@ -75,47 +75,6 @@ function OnionFlow(props) {
         }
     }, [setEdges, setNodes, props.onion_id]);
 
-    const getOnionParentNodes = useCallback(async (onion_id, new_node_list = [], new_edge_list = []) => {
-        const onion = await getOnionData(onion_id);
-        if (!onion) return;
-
-        if (onion.parent_onion) {
-            const parent_onion_id = onion.parent_onion;
-            const parentOnion = await getOnionData(parent_onion_id);
-            if (!parentOnion) return;
-
-            if (parentOnion.parent_onion) {
-                const newEdge = {
-                    id: `e${parentOnion.id}-${parentOnion.parent_onion}`,
-                    source: parentOnion.id.toString(),
-                    target: parentOnion.parent_onion.toString(),
-                    markerStart: 'myCustomSvgMarker',
-                    markerEnd: { type: 'arrow', color: '#f00' },
-                };
-                new_edge_list.push(newEdge);
-                setEdges(prevEdges => [...prevEdges, newEdge]);
-            }
-
-            const newNode = {
-                id: parentOnion.id.toString(),
-                sourcePosition: 'left',
-                targetPosition: 'right',
-                data: { label: parentOnion.title, onion_color: parentOnion.color },
-                position: { x: 400 * new_node_list.length * -1 - 200, y: 0 },
-                style: {
-                    ...nodeStyles.default,
-                    ...(parentOnion.color === "Purple" ? nodeStyles.purple : nodeStyles.red),
-                }
-            };
-            new_node_list.push(newNode);
-            setNodes(prevNodes => [...prevNodes, newNode]);
-
-            if (parentOnion.next) {
-                getOnionParentNodes(parentOnion.id, new_node_list, new_edge_list);
-            }
-        }
-    }, [setEdges, setNodes]);
-
     const getOnionParentNodes = useCallback((onion_id, new_node_list = [], new_edge_list = []) => {
         axios.get(`/api/onions/onionvisualize/${onion_id}`)
             .then(function (response) {
