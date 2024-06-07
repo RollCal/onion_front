@@ -71,7 +71,7 @@ function OnionFlow(props) {
         setNodes(prevNodes => [...prevNodes, newNode]);
 
         if (onion.next) {
-            getOnionChildNodes(onion.next.id, new_node_list, new_edge_list);
+            await getOnionChildNodes(onion.next.id, new_node_list, new_edge_list);
         }
     }, [setEdges, setNodes, props.onion_id]);
 
