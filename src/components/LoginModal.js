@@ -28,7 +28,7 @@ function LoginModal() {
 
     const handleLogin = async () => {
         try {
-            const response = await axios.post('http://localhost:8000/api/accounts/login/', {
+            const response = await axios.post('/api/accounts/login/', {
                 username,
                 password,
             }, {
