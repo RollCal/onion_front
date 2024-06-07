@@ -185,19 +185,27 @@ function Onions(props) {
 
     function OnionEditor({onion_title}) {
 
-        return (
-            <Editable
-                textAlign='center'
-                defaultValue={onion_title} // defaultValue를 externalData에 기반하여 설정
-                fontSize='2xl'
-                isPreviewFocusable={false}
-            >
-                <EditablePreview/>
-                {/* 여기서 사용자 정의 입력 */}
-                <Input id="edit_input" as={EditableInput} value={onion_title}/> {/* readOnly로 설정하여 사용자가 직접 수정하지 못하게 */}
-                <EditableControls/>
-            </Editable>
-        );
+        const username = localStorage.getItem("username");
+        if (onion_writer === username) {
+            return (
+                <Editable
+                    textAlign='center'
+                    defaultValue={onion_title} // defaultValue를 externalData에 기반하여 설정
+                    fontSize='2xl'
+                    isPreviewFocusable={false}
+                >
+                    <EditablePreview/>
+                    {/* 여기서 사용자 정의 입력 */}
+                    <Input id="edit_input" as={EditableInput}
+                           value={onion_title}/> {/* readOnly로 설정하여 사용자가 직접 수정하지 못하게 */}
+                    <EditableControls/>
+                </Editable>
+            );
+        } else {
+            return (
+                <></>
+            )
+        }
     }
 
 
@@ -233,7 +241,7 @@ function Onions(props) {
                             setOnion_title(document.getElementById("edit_input").value);
                         } else {
                             alert("수정기간이지나 관리자에게 삭제요청을 하였습니다");
-                            setOnion_title(onion_title+" ");
+                            setOnion_title(onion_title + " ");
                         }
                     })
                     .catch(function (error) {
@@ -246,10 +254,10 @@ function Onions(props) {
                             } else {
                                 alert("서버에서 문제가 발생하였습니다.");
                             }
-                            setOnion_title(onion_title+" ");
+                            setOnion_title(onion_title + " ");
                         } else {
                             alert("서버에서 문제가 발생하였습니다.");
-                            setOnion_title(onion_title+" ");
+                            setOnion_title(onion_title + " ");
                         }
                     });
             }
@@ -286,6 +294,35 @@ function Onions(props) {
             </ButtonGroup>
         );
     }
+
+
+    function CommentEditor({onion_title, onion_writer}) {
+
+        const username = localStorage.getItem("username");
+        if (onion_writer === username) {
+            return (
+                <Editable
+                    textAlign='center'
+                    defaultValue={onion_title} // defaultValue를 externalData에 기반하여 설정
+                    fontSize='2xl'
+                    isPreviewFocusable={false}
+                >
+                    <EditablePreview/>
+                    {/* 여기서 사용자 정의 입력 */}
+                    <Input id="edit_input" as={EditableInput}
+                           value={onion_title}/> {/* readOnly로 설정하여 사용자가 직접 수정하지 못하게 */}
+                    <EditableControls/>
+                </Editable>
+            );
+        } else {
+            return (
+                <></>
+            )
+        }
+    }
+
+
+
 
     return (
         <div>
@@ -395,26 +432,38 @@ function Onions(props) {
                                     <FaArrowDown/>
                                 </Button>
                             </Tooltip>
-                            <Tooltip label='DELETE ONION'>
-                                <Button border='2px' size='xs' bgColor="white" color="red.300"
-                                        borderColor="red.300"
-                                        marginTop="10px"
-                                        onClick={() => {
-                                            onionDeleteButtonHandler(comment.id)
-                                        }}>
-                                    <DeleteIcon/>
-                                </Button>
-                            </Tooltip>
-                            <Tooltip label='EDIT ONION'>
-                                <Button border='2px' size='xs' bgColor="white" color="grey"
-                                        borderColor="grey"
-                                        marginTop="10px"
-                                        onClick={() => {
-                                            commentVoteButtonHandler(comment.id, "Down")
-                                        }}>
-                                    <EditIcon/>
-                                </Button>
-                            </Tooltip>
+                            <CommentEditor onion_title={comment.title} onion_writer={comment.writer} />
+
+                            {
+                                comment.writer === onion_writer ? (
+                                        <>
+                                            <Tooltip label='DELETE ONION'>
+                                                <Button border='2px' size='xs' bgColor="white" color="red.300"
+                                                        borderColor="red.300"
+                                                        marginTop="10px"
+                                                        onClick={() => {
+                                                            onionDeleteButtonHandler(comment.id)
+                                                        }}>
+                                                    <DeleteIcon/>
+                                                </Button>
+                                            </Tooltip>
+                                            <Tooltip label='EDIT ONION'>
+                                                <Button border='2px' size='xs' bgColor="white" color="grey"
+                                                        borderColor="grey"
+                                                        marginTop="10px"
+                                                        onClick={() => {
+                                                            commentVoteButtonHandler(comment.id, "Down")
+                                                        }}>
+                                                    <EditIcon/>
+                                                </Button>
+                                            </Tooltip>
+                                        </>
+                                    )
+                                    :
+                                    (
+                                        <></>
+                                    )
+                            }
 
                         </Flex>
                     )}

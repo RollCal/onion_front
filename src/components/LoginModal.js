@@ -43,6 +43,7 @@ function LoginModal() {
                 console.log('Access Token:', access);
                 console.log('Refresh Token:', refresh);
 
+                localStorage.setItem('username', username);
                 localStorage.setItem('token', access);
                 localStorage.setItem('refresh', refresh);
                 localStorage.setItem('loginTime', new Date().getTime());
