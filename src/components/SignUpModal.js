@@ -17,17 +17,21 @@ import {
     AlertIcon
 } from '@chakra-ui/react';
 
-function RegisterModal({ onRegister }) {
+function SignUpModal({ onRegister }) {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [password2, setPassword2] = useState('');
     const [email, setEmail] = useState('');
     const [nickname, setNickname] = useState('');
-    const [gender, setGender] = useState('');
+    // 성별 선택 상태 추가
+    const [selectedGender, setSelectedGender] = useState('');
     const [birth, setBirth] = useState('');
+    const [confirm, setConfirm] = useState('');
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
+    const [emailSent, setEmailSent] = useState(false);
+
 
     const handleRegister = async () => {
         try {
@@ -37,8 +41,9 @@ function RegisterModal({ onRegister }) {
                 password2,
                 email,
                 nickname,
-                gender,
-                birth
+                gender: selectedGender, // 선택된 성별 값 전달
+                birth,
+                confirm
             }, {
                 headers: {
                     'Content-Type': 'application/json',
@@ -54,6 +59,29 @@ function RegisterModal({ onRegister }) {
             }
         } catch (error) {
             console.error('Error during registration:', error);
+            const errorMessage = error.response?.data || 'An unexpected error occurred';
+            setError(JSON.stringify(errorMessage));
+        }
+    };
+
+    const handleSendConfirmEmail = async () => {
+        try {
+            const response = await axios.post('http://localhost:8000/api/accounts/confirm/', {
+                email
+            }, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (response.status === 200) {
+                setEmailSent(true);
+                setSuccess('Confirmation email sent. Please check your email for the confirmation code.');
+            } else {
+                setError(response.data.error || 'Failed to send confirmation email');
+            }
+        } catch (error) {
+            console.error('Error sending confirmation email:', error);
             const errorMessage = error.response?.data || 'An unexpected error occurred';
             setError(JSON.stringify(errorMessage));
         }
@@ -88,6 +116,13 @@ function RegisterModal({ onRegister }) {
                         <FormControl id="email" mt={4}>
                             <FormLabel>Email</FormLabel>
                             <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+                            <Button mt={2} colorScheme="blue" onClick={handleSendConfirmEmail} isDisabled={emailSent}>
+                                Send Confirmation Email
+                            </Button>
+                        </FormControl>
+                        <FormControl id="confirm" mt={4} isDisabled={!emailSent}>
+                            <FormLabel>Confirmation Code</FormLabel>
+                            <Input type="text" value={confirm} onChange={(e) => setConfirm(e.target.value)} />
                         </FormControl>
                         <FormControl id="nickname" mt={4}>
                             <FormLabel>Nickname</FormLabel>
@@ -95,7 +130,12 @@ function RegisterModal({ onRegister }) {
                         </FormControl>
                         <FormControl id="gender" mt={4}>
                             <FormLabel>Gender</FormLabel>
-                            <Input type="text" value={gender} onChange={(e) => setGender(e.target.value)} />
+                            <Button colorScheme={selectedGender === 'M'? 'blue' : 'gray'} onClick={() => setSelectedGender('M')} isDisabled={selectedGender === 'M'}>
+                                M
+                            </Button>
+                            <Button colorScheme={selectedGender === 'F'? 'blue' : 'gray'} onClick={() => setSelectedGender('F')} isDisabled={selectedGender === 'F'}>
+                                F
+                            </Button>
                         </FormControl>
                         <FormControl id="birth" mt={4}>
                             <FormLabel>Birth</FormLabel>
@@ -112,7 +152,7 @@ function RegisterModal({ onRegister }) {
                     </ModalBody>
 
                     <ModalFooter>
-                        <Button colorScheme="blue" mr={3} onClick={handleRegister}>
+                        <Button colorScheme="blue" mr={3} onClick={handleRegister} isDisabled={!emailSent}>
                             Sign up
                         </Button>
                         <Button variant="ghost" onClick={onClose}>Cancel</Button>
@@ -123,4 +163,4 @@ function RegisterModal({ onRegister }) {
     );
 }
 
-export default RegisterModal;
+export default SignUpModal;
