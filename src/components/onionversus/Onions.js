@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useState} from 'react';
 import axios from "axios";
-import {useParams} from "react-router";
+import {useNavigate, useParams} from "react-router";
 import OnionFlow from "./OnionFlow";
 import CreateOnion from "./CreateOnion";
 import {Link} from "react-router-dom";
@@ -9,10 +9,10 @@ import {
     Button,
     ButtonGroup,
     Editable, EditableInput, EditablePreview,
-    Flex,
-    IconButton, Input,
-    Spacer,
-    Tooltip,
+    Flex, FocusLock, FormControl, FormLabel,
+    IconButton, Input, Popover, PopoverArrow, PopoverCloseButton, PopoverContent, PopoverTrigger,
+    Spacer, Stack,
+    Tooltip, useDisclosure,
     useEditableControls
 } from "@chakra-ui/react";
 import {FaArrowUp, FaArrowDown} from "react-icons/fa";
@@ -22,7 +22,7 @@ import {CheckIcon, CloseIcon, DeleteIcon, EditIcon} from "@chakra-ui/icons";
 function Onions(props) {
 
     const param = useParams();
-
+    const navigate = useNavigate();
     const [onionList, setOnionList] = useState([]);
     const [onion, setOnion] = useState();
     const [onion_title, setOnion_title] = useState();
@@ -183,137 +183,128 @@ function Onions(props) {
         });
     }, [param.onion_id, isLoggedIn]); // 목록에있는 데이터들이 변경 될때마나 리랜더링, 공백일때는 무조건 한번 랜더링
 
-    function OnionEditor({onion_title}) {
+    const TextInput = React.forwardRef((props, ref) => {
+        return (
+            <FormControl>
+                <FormLabel htmlFor={props.id}>{props.label}</FormLabel>
+                <Input ref={ref} id={props.id} {...props} />
+            </FormControl>
+        )
+    });
 
-        const username = localStorage.getItem("username");
-        if (onion_writer === username) {
-            return (
-                <Editable
-                    textAlign='center'
-                    defaultValue={onion_title} // defaultValue를 externalData에 기반하여 설정
-                    fontSize='2xl'
-                    isPreviewFocusable={false}
-                >
-                    <EditablePreview/>
-                    {/* 여기서 사용자 정의 입력 */}
-                    <Input id="edit_input" as={EditableInput}
-                           value={onion_title}/> {/* readOnly로 설정하여 사용자가 직접 수정하지 못하게 */}
-                    <EditableControls/>
-                </Editable>
-            );
-        } else {
-            return (
-                <></>
-            )
-        }
-    }
+    const Form = ({firstFieldRef, onCancel, onion_title, onion_id}) => {
 
-
-    function EditableControls(edit_onion_id) {
-        const {
-            isEditing,
-            getSubmitButtonProps,
-            getCancelButtonProps,
-            getEditButtonProps,
-        } = useEditableControls();
-
-        const onionEditButtonHandler = (onion_id) => {
-            // 로컬스토리지에서 토큰 가져오기
-            const token = localStorage.getItem("token");
-
-            if (!token) {
-                alert("로그인이 필요합니다!");
-            } else {
-                // 헤더에 넣기
-                const config = {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    }
-                };
-
-                axios.put(`/api/onions/${onion_id}`, {
-                    title: document.getElementById("edit_input").value
-                }, config)
-                    .then(function (response) {
-                        if (response.data.code === 200) {
-                            alert("정상적으로 수정되었습니다.");
-                            setOnion_title(document.getElementById("edit_input").value);
-                        } else {
-                            alert("수정기간이지나 관리자에게 삭제요청을 하였습니다");
-                            setOnion_title(onion_title + " ");
-                        }
-                    })
-                    .catch(function (error) {
-                        console.log(error);
-                        if (error.response) {
-                            if (error.response.data.code === 403) {
-                                alert("글 작성자가 아닙니다.");
-                            } else if (error.response.data.code === 400) {
-                                alert("이미 수정요청하셨습니다.");
-                            } else {
-                                alert("서버에서 문제가 발생하였습니다.");
-                            }
-                            setOnion_title(onion_title + " ");
-                        } else {
-                            alert("서버에서 문제가 발생하였습니다.");
-                            setOnion_title(onion_title + " ");
-                        }
-                    });
-            }
-        }
-
-        const checkIconProps = {
-            ...getSubmitButtonProps(),
-            onClick: (event) => {
-                onionEditButtonHandler(onion);
-            },
-        };
-
-        return isEditing ? (
-            <ButtonGroup justifyContent='center' size='sm'>
-                <IconButton icon={<CheckIcon/>} {...checkIconProps} />
-                <IconButton icon={<CloseIcon/>} {...getCancelButtonProps()} />
-            </ButtonGroup>
-        ) : (
-            <ButtonGroup>
-                <Tooltip label='DELETE ONION'>
-                    <Button border='2px' size='md' bgColor="white" color="red.300"
-                            borderColor="red.300"
-                            marginTop="10px"
-                            onClick={() => {
-                                onionDeleteButtonHandler(onion);
-                            }}>
-                        <DeleteIcon/>
+        return (
+            <Stack spacing={4}>
+                <TextInput
+                    id={`edit_input_${onion_id}`}
+                    ref={firstFieldRef}
+                    defaultValue={onion_title}
+                />
+                <ButtonGroup display='flex' justifyContent='flex-end'>
+                    <Button variant='outline' onClick={() => {
+                        setOnion_title(onion_title + " ");
+                        onCancel();
+                    }}>
+                        Cancel
                     </Button>
-                </Tooltip>
-                <Tooltip label='EDIT ONION'>
-                    <IconButton border='2px' size='md' bgColor="white" color="grey" borderColor="grey"
-                                marginTop="10px" icon={<EditIcon/>} {...getEditButtonProps()} />
-                </Tooltip>
-            </ButtonGroup>
-        );
+                    <Button colorScheme='teal' onClick={() => {
+                        // 로컬스토리지에서 토큰 가져오기
+                        const token = localStorage.getItem("token");
+
+                        if (!token) {
+                            alert("로그인이 필요합니다!");
+                        } else {
+                            // 헤더에 넣기
+                            const config = {
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'Authorization': `Bearer ${token}`
+                                }
+                            };
+
+                            axios.put(`/api/onions/${onion_id}`, {
+                                title: document.getElementById(`edit_input_${onion_id}`).value
+                            }, config)
+                                .then(function (response) {
+                                    console.log(response.data);
+                                    if (response.data.code === 200) {
+                                        alert("정상적으로 수정되었습니다.");
+                                        setOnion_title(document.getElementById(`edit_input_${onion_id}`).value);
+                                    } else {
+                                        alert("수정기간이지나 관리자에게 삭제요청을 하였습니다");
+                                        document.getElementById(`edit_input_${onion_id}`).value = onion_title
+                                    }
+                                })
+                                .catch(function (error) {
+                                    if (error.response) {
+                                        if (error.response.data.code === 403) {
+                                            alert("글 작성자가 아닙니다.");
+                                        } else if (error.response.data.code === 400) {
+                                            alert("이미 수정요청하셨습니다.");
+                                        } else {
+                                            alert("서버에서 문제가 발생하였습니다.");
+                                        }
+                                        document.getElementById(`edit_input_${onion_id}`).value = onion_title
+                                    } else {
+                                        alert("서버에서 문제가 발생하였습니다.");
+                                        document.getElementById(`edit_input_${onion_id}`).value = onion_title
+                                    }
+                                });
+                        }
+                    }}>
+                        Save
+                    </Button>
+                </ButtonGroup>
+            </Stack>
+        )
     }
 
-
-    function CommentEditor({onion_title, onion_writer}) {
+    const GetOnionEditForm = ({onion_title, onion_id}) => {
+        const {onOpen, onClose, isOpen} = useDisclosure()
+        const firstFieldRef = React.useRef(null)
 
         const username = localStorage.getItem("username");
-        if (onion_writer === username) {
+
+        if (username === onion_writer) {
             return (
-                <Editable
-                    textAlign='center'
-                    defaultValue={onion_title} // defaultValue를 externalData에 기반하여 설정
-                    fontSize='2xl'
-                    isPreviewFocusable={false}
-                >
-                    <EditablePreview/>
-                    {/* 여기서 사용자 정의 입력 */}
-                    <Input id="edit_input" as={EditableInput}
-                           value={onion_title}/> {/* readOnly로 설정하여 사용자가 직접 수정하지 못하게 */}
-                    <EditableControls/>
-                </Editable>
-            );
+                <>
+                    <Tooltip label='DELETE ONION'>
+                        <Button border='2px' size='md' bgColor="white" color="red.300"
+                                borderColor="red.300"
+                                marginTop="10px"
+                                onClick={() => {
+                                    onionDeleteButtonHandler(onion_id);
+                                }}>
+                            <DeleteIcon/>
+                        </Button>
+                    </Tooltip>
+                    <Popover
+                        isOpen={isOpen}
+                        initialFocusRef={firstFieldRef}
+                        onOpen={onOpen}
+                        onClose={onClose}
+                        placement='right'
+                        closeOnBlur={false}
+                    >
+                        <PopoverTrigger>
+                            <IconButton border='2px' size='md' bgColor="white" color="grey" borderColor="grey"
+                                        marginTop="10px" icon={<EditIcon/>}/>
+                        </PopoverTrigger>
+                        <PopoverContent p={5}>
+                            <FocusLock returnFocus persistentFocus={false}>
+                                <PopoverArrow/>
+                                <PopoverCloseButton onClick={() => {
+                                    document.getElementById(`edit_input_${onion_id}`).value = onion_title
+                                    onClose();
+                                }}/>
+                                <Form firstFieldRef={firstFieldRef} onCancel={onClose} onion_title={onion_title}
+                                      onion_id={onion_id}/>
+                            </FocusLock>
+                        </PopoverContent>
+                    </Popover>
+                </>
+            )
         } else {
             return (
                 <></>
@@ -321,7 +312,123 @@ function Onions(props) {
         }
     }
 
+    const CommentForm = ({firstFieldRef, onCancel, onion_title, onion_id}) => {
 
+        return (
+            <Stack spacing={4}>
+                <TextInput
+                    id={`edit_input_${onion_id}`}
+                    ref={firstFieldRef}
+                    defaultValue={onion_title}
+                />
+                <ButtonGroup display='flex' justifyContent='flex-end'>
+                    <Button variant='outline' onClick={() => {
+                        onCancel();
+                    }}>
+                        Cancel
+                    </Button>
+                    <Button colorScheme='teal' onClick={() => {
+                        // 로컬스토리지에서 토큰 가져오기
+                        const token = localStorage.getItem("token");
+
+                        if (!token) {
+                            alert("로그인이 필요합니다!");
+                        } else {
+                            // 헤더에 넣기
+                            const config = {
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'Authorization': `Bearer ${token}`
+                                }
+                            };
+
+                            axios.put(`/api/onions/${onion_id}`, {
+                                title: document.getElementById(`edit_input_${onion_id}`).value
+                            }, config)
+                                .then(function (response) {
+                                    if (response.data.code === 200) {
+                                        alert("정상적으로 수정되었습니다.");
+                                        navigate(`/onion/${onion_id}`);
+                                    } else {
+                                        alert("수정기간이지나 관리자에게 삭제요청을 하였습니다");
+                                        document.getElementById(`edit_input_${onion_id}`).value = onion_title
+                                        onCancel();
+                                    }
+                                })
+                                .catch(function (error) {
+                                    if (error.response) {
+                                        if (error.response.data.code === 403) {
+                                            alert("글 작성자가 아닙니다.");
+                                        } else if (error.response.data.code === 400) {
+                                            alert("이미 수정요청하셨습니다.");
+                                        } else {
+                                            alert("서버에서 문제가 발생하였습니다.");
+                                        }
+                                        document.getElementById(`edit_input_${onion_id}`).value = onion_title
+                                    } else {
+                                        alert("서버에서 문제가 발생하였습니다.");
+                                        document.getElementById(`edit_input_${onion_id}`).value = onion_title
+                                    }
+                                });
+                        }
+                    }}>
+                        Save
+                    </Button>
+                </ButtonGroup>
+            </Stack>
+        )
+    }
+
+    const GetCommentEditForm = ({onion_title, onion_id, writer}) => {
+        const {onOpen, onClose, isOpen} = useDisclosure()
+        const firstFieldRef = React.useRef(null)
+
+        const username = localStorage.getItem("username");
+
+        if (username === writer) {
+            return (
+                <>
+                    <Tooltip label='DELETE ONION'>
+                        <Button border='2px' size='xs' bgColor="white" color="red.300"
+                                borderColor="red.300"
+                                marginTop="10px"
+                                onClick={() => {
+                                    onionDeleteButtonHandler(onion_id);
+                                }}>
+                            <DeleteIcon/>
+                        </Button>
+                    </Tooltip>
+                    <Popover
+                        isOpen={isOpen}
+                        initialFocusRef={firstFieldRef}
+                        onOpen={onOpen}
+                        onClose={onClose}
+                        placement='right'
+                        closeOnBlur={false}
+                    >
+                        <PopoverTrigger>
+                            <IconButton border='2px' size='xs' bgColor="white" color="grey" borderColor="grey"
+                                        marginTop="10px" icon={<EditIcon/>}/>
+                        </PopoverTrigger>
+                        <PopoverContent p={5}>
+                            <FocusLock returnFocus persistentFocus={false}>
+                                <PopoverArrow/>
+                                <PopoverCloseButton onClick={() => {
+                                    onClose();
+                                }}/>
+                                <CommentForm firstFieldRef={firstFieldRef} onCancel={onClose} onion_title={onion_title}
+                                             onion_id={onion_id}/>
+                            </FocusLock>
+                        </PopoverContent>
+                    </Popover>
+                </>
+            )
+        } else {
+            return (
+                <></>
+            )
+        }
+    }
 
 
     return (
@@ -405,7 +512,7 @@ function Onions(props) {
                         <Spacer/>
                         <Box>
                             <ButtonGroup>
-                                <OnionEditor onion_title={onion_title}/>
+                                <GetOnionEditForm onion_title={onion_title} onion_id={onion}/>
                             </ButtonGroup>
                         </Box>
                     </Flex>
@@ -432,38 +539,8 @@ function Onions(props) {
                                     <FaArrowDown/>
                                 </Button>
                             </Tooltip>
-                            <CommentEditor onion_title={comment.title} onion_writer={comment.writer} />
-
-                            {
-                                comment.writer === onion_writer ? (
-                                        <>
-                                            <Tooltip label='DELETE ONION'>
-                                                <Button border='2px' size='xs' bgColor="white" color="red.300"
-                                                        borderColor="red.300"
-                                                        marginTop="10px"
-                                                        onClick={() => {
-                                                            onionDeleteButtonHandler(comment.id)
-                                                        }}>
-                                                    <DeleteIcon/>
-                                                </Button>
-                                            </Tooltip>
-                                            <Tooltip label='EDIT ONION'>
-                                                <Button border='2px' size='xs' bgColor="white" color="grey"
-                                                        borderColor="grey"
-                                                        marginTop="10px"
-                                                        onClick={() => {
-                                                            commentVoteButtonHandler(comment.id, "Down")
-                                                        }}>
-                                                    <EditIcon/>
-                                                </Button>
-                                            </Tooltip>
-                                        </>
-                                    )
-                                    :
-                                    (
-                                        <></>
-                                    )
-                            }
+                            <GetCommentEditForm onion_title={comment.title} onion_id={comment.id}
+                                                writer={comment.writer}/>
 
                         </Flex>
                     )}
