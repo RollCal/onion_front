@@ -116,10 +116,84 @@ function OnionFlow(props) {
         }
     }, [setEdges, setNodes]);
 
+    const getOnionParentNodes = useCallback((onion_id, new_node_list = [], new_edge_list = []) => {
+        axios.get(`/api/onions/onionvisualize/${onion_id}`)
+            .then(function (response) {
+                if (response.data.parent_onion) {
+                    const parent_onion_id = response.data.parent_onion;
+                    axios.get(`/api/onions/onionvisualize/${parent_onion_id}`)
+                        .then(function (response) {
+                            const onion = response.data;
+                            if (onion.parent_onion) {
+                                const newEdge = {
+                                    id: `e${onion.id}-${onion.parent_onion}`,
+                                    source: onion.id.toString(),
+                                    target: onion.parent_onion.toString(),
+                                    markerStart: 'myCustomSvgMarker', markerEnd: {type: 'arrow', color: '#f00'},
+                                };
+
+                                new_edge_list.push(newEdge);
+                                setEdges(prevEdges => [...prevEdges, newEdge]);
+                            }
+
+                            const newNode = {
+                                id: onion.id.toString(),
+                                sourcePosition: 'left',
+                                targetPosition: 'right',
+                                data: {label: onion.title, onion_color: onion.color},
+                                position: {x: 400 * new_node_list.length * -1 - 400, y: 0},
+                            };
+
+                            if (onion.color === "Purple") {
+                                newNode.style = {
+                                    backgroundColor: "#9747FF",
+                                    color: "white",
+                                    height: "200px",
+                                    width: "350px",
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    fontSize: "30px",
+                                    paddingTop: "70px",
+                                    borderRadius: "10px",
+
+                                }
+                            } else {
+                                newNode.style = {
+                                    backgroundColor: "#F24822",
+                                    color: "white",
+                                    height: "200px",
+                                    width: "350px",
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    fontSize: "30px",
+                                    paddingTop: "70px",
+                                    borderRadius: "10px",
+                                }
+                            }
+
+                            new_node_list.push(newNode);
+                            setNodes(prevNodes => [...prevNodes, newNode]);
+
+
+                            if (onion.next) {
+                                getOnionParentNodes(onion.id, new_node_list, new_edge_list);
+                            }
+                        })
+                        .catch(function (error) {
+
+                        });
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    }, [setEdges, setNodes])
+
     useEffect(() => {
         getOnionChildNodes(props.onion_id);
         getOnionParentNodes(props.onion_id);
     }, [getOnionChildNodes, getOnionParentNodes, props.onion_id]);
+  
 
     const defaultViewport = { x: 200, y: 150, zoom: 1 };
 
