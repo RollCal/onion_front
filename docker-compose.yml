@@ -5,8 +5,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-      target: production
     ports:
       - "80:80"
     volumes:
+      - ./build:/usr/share/nginx/html
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
