@@ -156,6 +156,7 @@ function Onions(props) {
                 .then(function (response) {
                     if (response.data.code === 200) {
                         alert("정상적으로 삭제되었습니다.");
+                        setOnionList(onionList.filter(onionList => onionList.id !== onion_id));
                     } else {
                         alert("삭제기간이지나 관리자에게 삭제요청을 하였습니다");
                     }
