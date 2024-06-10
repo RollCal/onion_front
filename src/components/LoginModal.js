@@ -65,12 +65,12 @@ function LoginModal() {
 
     return (
         <>
-            <Button colorScheme='purple' onClick={onOpen}>Log in</Button>
+            <Button colorScheme='purple' onClick={onOpen}>로그인</Button>
 
             <Modal isOpen={isOpen} onClose={onClose}>
                 <ModalOverlay />
                 <ModalContent>
-                    <ModalHeader>Log in</ModalHeader>
+                    <ModalHeader>로그인</ModalHeader>
                     <ModalCloseButton />
                     <ModalBody>
                         {error && (

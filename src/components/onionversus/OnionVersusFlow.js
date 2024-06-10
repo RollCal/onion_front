@@ -131,16 +131,21 @@ function OnionVersusFlow(prop) {
                         {highlight}
                     </Text>
                 )}
-                <Grid>
+                <Grid pt={5}>
                     <GridItem colSpan={1} w='100%'>
                         <Text fontSize={'30px'} ml={2} mb={2}>{ov_title}</Text>
                     </GridItem>
                 </Grid>
                 <Grid templateColumns={`repeat(${total_up_vote_cnt}, 1fr)`}>
-                    <GridItem colSpan={orange_up_vote_cnt} w='100%' h='10' bg='#F24822' color="white" p={2} pl={5}>
+                    <GridItem colSpan={orange_up_vote_cnt} w='100%' h='45px' bg='#F24822'
+                              color="white"
+                              borderTopLeftRadius='5px' borderTop='2px solid black' borderLeft='2px solid black'
+                              p={2} pl={5}>
                         {orange_onion_title}
                     </GridItem>
-                    <GridItem colSpan={purple_up_vote_cnt} w='100%' h='10' bg='#9747FF' align='right' color="white"
+                    <GridItem colSpan={purple_up_vote_cnt} w='100%' h='45px' bg='#9747FF' align='right'
+                              color="white"
+                              borderTopRightRadius='5px' borderTop='2px solid black' borderRight='2px solid black'
                               p={2} pr={5}>
                         {purple_onion_title}
                     </GridItem>
@@ -150,16 +155,16 @@ function OnionVersusFlow(prop) {
     };
 
     return (
-        <Box p="10">
+        <Box p="0" width='100%' borderBottom='2px solid lightgray'>
             <VersusInfo/>
             <Box style={{
-                width: '70vw',
+                width: '100%',
                 height: '500px',
-                border: '6px solid',
-                marginTop: "10px",
+                border: '2px solid grey',
+                borderTop: 'None',
                 marginBottom: "10px",
-                borderRadius: "10px",
-                borderColor: "lightgrey"
+                borderBottomLeftRadius:"5px",
+                borderBottomRightRadius:"5px",
             }}>
                 <ReactFlow
                     nodes={nodes}

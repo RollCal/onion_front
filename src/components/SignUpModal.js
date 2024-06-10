@@ -95,12 +95,12 @@ function SignUpModal() {
 
     return (
         <>
-            <Button colorScheme='orange' bgColor="#F24822" onClick={onOpen}>Sign up</Button>
+            <Button colorScheme='orange' bgColor="#F24822" onClick={onOpen}>회원가입</Button>
 
             <Modal isOpen={isOpen} onClose={onClose}>
                 <ModalOverlay />
                 <ModalContent>
-                    <ModalHeader>Sign up</ModalHeader>
+                    <ModalHeader>회원가입</ModalHeader>
                     <ModalCloseButton />
                     <ModalBody>
                         {error && (

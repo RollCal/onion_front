@@ -50,14 +50,15 @@ function Layout(props) {
             `}
             gridTemplateRows={'100px 1fr 30px'}
             gridTemplateColumns={'200px 1fr'}
-            h='200px'
             gap='1'
             color='blackAlpha.700'
             fontWeight='bold'
+            container
+            width='100%'
         >
-            <GridItem pl='2' area={'header'} alignItems="center" p={2}>
-                <Flex minWidth='max-content' alignItems='center' gap='2'>
-                    <Box p='2'>
+            <GridItem area={'header'} display="flex" alignItems="center" justifyContent="space-evenly">
+                <Flex width='100%' alignItems='center' gap='2' justifyContent="space-between" display="flex" flexDirection="row" pl='3%' pr='3%' borderBottom='1px solid black'>
+                    <Box>
                         <Link to="/">
                             <Image src="/images/logo.png" alt="Logo"/>
                         </Link>
@@ -67,12 +68,27 @@ function Layout(props) {
                         {isLoggedIn ? (
                             <ButtonGroup gap='2'>
                                 <Tooltip label='Create Onion Versus'>
-                                    <Button color="#F24822" border='2px' borderColor='#F24822' bgColor="white" onClick={() => navigate("/versus/create")}>
-                                        <AddIcon/>
+                                    <Button
+                                        color="#F24822"
+                                        border="3px solid"
+                                        borderColor="#F24822"
+                                        bgColor="white"
+                                        onClick={() => navigate("/versus/create")}
+                                        position="fixed"
+                                        width="60px"
+                                        height="60px"
+                                        bottom="8%"
+                                        right="4%"
+                                        _hover={{
+                                            bgColor: "#F24822",
+                                            color: "white",
+                                        }}
+                                    >
+                                        <AddIcon boxSize={7} strokeWidth={1} />
                                     </Button>
                                 </Tooltip>
-                                <Button color="purple" border='2px' borderColor='purple' onClick={handleLogout}>
-                                    Log out
+                                <Button bg="white" color="purple" border='2px' borderColor='purple' onClick={handleLogout}>
+                                    로그아웃
                                 </Button>
                             </ButtonGroup>
                         ) : (
@@ -84,30 +100,30 @@ function Layout(props) {
                     </Box>
                 </Flex>
             </GridItem>
-            <GridItem pl='2' area={'main'} display="flex" alignItems="center" justifyContent="space-evenly">
-                <Flex alignItems='center'>
+            <GridItem area={'main'} display="flex" alignItems="center" justifyContent="space-evenly">
+                <Flex width='100%' display="flex" alignItems="center" justifyContent="space-evenly">
                     {props.children}
                 </Flex>
             </GridItem>
-            <GridItem bg='white' area={'footer'} align='center' position={'relative'} transform={'translate(-100%)'} p={10}>
-                <Grid templateColumns="repeat(1, 1fr)" pb="10">
-                    <GridItem>
-                        <Text as="b" fontSize='lg'>Proudly made in '선동과날조 team'</Text>
-                    </GridItem>
-                    <GridItem>
-                        <Tooltip label="ONION_FRONT">
-                            <Button bg="white" onClick={() => window.open("https://github.com/RollCal/onion_front")}>
-                                <FaGithubSquare size="30px"/>
-                            </Button>
-                        </Tooltip>
-                        <Tooltip label="ONION_BACK">
-                            <Button bg="white" onClick={() => window.open("https://github.com/RollCal/onion")}>
-                                <FaGithub size="30px"/>
-                            </Button>
-                        </Tooltip>
-                    </GridItem>
-                </Grid>
-            </GridItem>
+            {/*<GridItem bg='white' area={'footer'} align='center' position={'relative'} transform={'translate(-100%)'}>*/}
+            {/*    <Grid templateColumns="repeat(1, 1fr)" pb="10">*/}
+            {/*        <GridItem>*/}
+            {/*            <Text as="b" fontSize='lg'>Proudly made in '선동과날조 team'</Text>*/}
+            {/*        </GridItem>*/}
+            {/*        <GridItem>*/}
+            {/*            <Tooltip label="ONION_FRONT">*/}
+            {/*                <Button bg="white" onClick={() => window.open("https://github.com/RollCal/onion_front")}>*/}
+            {/*                    <FaGithubSquare size="30px"/>*/}
+            {/*                </Button>*/}
+            {/*            </Tooltip>*/}
+            {/*            <Tooltip label="ONION_BACK">*/}
+            {/*                <Button bg="white" onClick={() => window.open("https://github.com/RollCal/onion")}>*/}
+            {/*                    <FaGithub size="30px"/>*/}
+            {/*                </Button>*/}
+            {/*            </Tooltip>*/}
+            {/*        </GridItem>*/}
+            {/*    </Grid>*/}
+            {/*</GridItem>*/}
         </Grid>
     );
 }

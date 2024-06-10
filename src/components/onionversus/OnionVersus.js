@@ -1,14 +1,15 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import axios from "axios";
 import OnionVersusFlow from "./OnionVersusFlow";
-import { Box, Button, Input } from "@chakra-ui/react";
+import { Box, Button, Input, InputGroup, InputLeftElement } from "@chakra-ui/react";
+import { SearchIcon } from '@chakra-ui/icons';
 
 function OnionVersus(props) {
     const [versusList, setVersusList] = useState([]);
     const [loading, setLoading] = useState(false);
     const [page, setPage] = useState(1);
     const [hasMore, setHasMore] = useState(true);
-    const [order, setOrder] = useState("");
+    const [order, setOrder] = useState("popular");
     const [pendingSearch, setPendingSearch] = useState("");
 
     const getVersusList = async (pageNumber, reset = false) => {
@@ -50,6 +51,7 @@ function OnionVersus(props) {
     }, [loading, hasMore]);
 
     const handleOrderChange = (newOrder) => {
+        setPendingSearch("")
         setOrder(newOrder);
     };
 
@@ -59,48 +61,93 @@ function OnionVersus(props) {
 
     const handleSearchSubmit = (event) => {
         event.preventDefault();
-        setOrder(`search: ${pendingSearch}`);
+        if (pendingSearch.trim() !== "") {
+            setOrder(`search: ${pendingSearch}`);
+        }
+    };
+
+    const handleKeyPress = (event) => {
+        if (event.key === 'Enter') {
+            handleSearchSubmit(event);
+        }
     };
 
     return (
-        <Box>
+        <Box position="relative">
             <Box display="flex" justifyContent="space-between" alignItems="center" mb={4}>
-                <Button colorScheme="gray" variant="outline" borderColor="black" border="2px" onClick={() => handleOrderChange('popular')}>
+                <Button
+                    backgroundColor={order === 'popular' ? '#F24822' : 'transparent'}
+                    color={order === 'popular' ? 'white' : 'black'}
+                    borderColor="black"
+                    border="2px"
+                    mr='5px'
+                    onClick={() => handleOrderChange('popular')}
+                >
                     인기순
                 </Button>
-                <Button colorScheme="gray" variant="outline" borderColor="black" border="2px" onClick={() => handleOrderChange('latest')}>
+                <Button
+                    backgroundColor={order === 'latest' ? '#F24822' : 'transparent'}
+                    color={order === 'latest' ? 'white' : 'black'}
+                    borderColor="black"
+                    border="2px"
+                    mr='5px'
+                    onClick={() => handleOrderChange('latest')}
+                >
                     최신순
                 </Button>
-                <Button colorScheme="gray" variant="outline" borderColor="black" border="2px" onClick={() => handleOrderChange('old')}>
+                <Button
+                    backgroundColor={order === 'old' ? '#F24822' : 'transparent'}
+                    color={order === 'old' ? 'white' : 'black'}
+                    borderColor="black"
+                    border="2px"
+                    mr='5px'
+                    onClick={() => handleOrderChange('old')}
+                >
                     날짜순
                 </Button>
                 <Box flex="1"></Box>
-                <Input
-                    type="text"
-                    value={pendingSearch}
-                    onChange={handlePendingSearchChange}
-                    placeholder="검색어를 입력하세요"
-                    size="md"
-                    bg="white"
-                    _placeholder={{ color: "gray.500" }}
-                    borderRadius="lg"
-                    borderWidth="1px"
-                    borderColor="gray.300"
-                    boxShadow="sm"
-                    p={2}
-                    w="400px"
-                />
-                <Button colorScheme="purple" variant="solid" type="submit" form="searchForm">
-                    검색
-                </Button>
             </Box>
-            <form id="searchForm" onSubmit={handleSearchSubmit}>
+            <Box
+                position="absolute"
+                top="-83px"
+                left="50%"
+                transform="translateX(-50%)"
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+                zIndex="1000"
+                bg="white"
+                p={2}
+                borderRadius="md"
+            >
+                <InputGroup>
+                    <InputLeftElement pointerEvents="none">
+                        <SearchIcon color="gray.300" />
+                    </InputLeftElement>
+                    <Input
+                        type="text"
+                        value={pendingSearch}
+                        onChange={handlePendingSearchChange}
+                        onKeyPress={handleKeyPress}
+                        placeholder="어니언을 검색하세요!"
+                        size="md"
+                        bg="white.100"
+                        borderRadius="50px"
+                        borderWidth="1px"
+                        borderColor="gray.300"
+                        boxShadow="sm"
+                        pr={5}
+                        w="350px"
+                    />
+                </InputGroup>
+            </Box>
+            <form id="searchForm" onSubmit={handleSearchSubmit} style={{ display: 'none' }}>
                 {/* 검색 폼 컨텐츠 */}
             </form>
             {versusList.map((item, index) => (
                 <OnionVersusFlow versus_data={item} key={index} />
             ))}
-            {loading && <Box padding="40px">Loding...</Box>}
+            {loading && <Box padding="40px">Loading...</Box>}
             <div ref={lastItemElementRef}></div>
         </Box>
     );
