@@ -71,7 +71,6 @@ function OnionVersus(props) {
             handleSearchSubmit(event);
         }
     };
-
     return (
         <Box position="relative">
             <Box display="flex" justifyContent="space-between" alignItems="center" mb={4}>
@@ -137,7 +136,7 @@ function OnionVersus(props) {
                         borderColor="gray.300"
                         boxShadow="sm"
                         pr={5}
-                        w="350px"
+                        w="300px"
                     />
                 </InputGroup>
             </Box>

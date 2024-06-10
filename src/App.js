@@ -10,7 +10,7 @@ function App() {
         <ChakraProvider>
             <GlobalProvider>
                 <Flex direction="column" bg="gray.10" justifyContent="center" alignItems="center" p={0}> {/* 화면 중앙 정렬 */}
-                    <Box width="70%" minWidth='800px' bg="white" boxShadow="md" direction="column" p={0} justifyContent="center" alignItems="center" height="100%">
+                    <Box width="70%" minWidth='500px' bg="white" boxShadow="md" direction="column" p={0} justifyContent="center" alignItems="center" height="100%">
                         <BrowserRouter>
                             <Routes>
                                 <Route path="/" element={<Home/>}/>

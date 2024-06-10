@@ -161,7 +161,7 @@ function OnionVersusFlow(prop) {
     };
 
     return (
-        <Box p="0" width='100%' borderBottom='2px solid lightgray'>
+        <Box p="0" width='100%' borderBottom='2px solid lightgray' mb={5}>
             <VersusInfo/>
             <Box style={{
                 width: '100%',
