@@ -60,8 +60,9 @@ function OnionFlow(props) {
                 id: `e${onion.id}-${onion.parent_onion}`,
                 source: onion.id.toString(),
                 target: onion.parent_onion.toString(),
-                markerStart: 'myCustomSvgMarker',
-                markerEnd: { type: 'arrow', color: '#f00' },
+                markerStart: { type: 'arrowstart', color: '#000' },
+                markerEnd: { type: 'arrowclosed', color: '#000' },
+                style: { strokeWidth: 3, stroke: '#000' },
             };
             new_edge_list.push(newEdge);
 
