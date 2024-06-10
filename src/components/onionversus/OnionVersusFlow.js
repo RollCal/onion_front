@@ -8,7 +8,7 @@ import './css/node.css';
 
 function OnionVersusFlow(prop) {
     const [nodes, setNodes, onNodesChange] = useNodesState([]);
-    const [edges, setEdges] = useEdgesState([]);
+    const [edges, setEdges, onEdgesChange] = useEdgesState([]);
     const navigate = useNavigate();
     // 최상위 노드 에서 부터 하위 노드 생성
     const getVersusNodes = useCallback((versus_data) => {
@@ -26,10 +26,12 @@ function OnionVersusFlow(prop) {
             backgroundImage: "url('/images/vs_img.png')",
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",
-            width: img.naturalWidth,
-            height: img.naturalHeight,
+            backgroundPosition: "center",
+            width: "300px",
+            height: "200px",
             borderColor: "white",
-        }
+            pointerEvents: "none",
+        };
 
         setNodes(prevNodes => [...prevNodes, newVSNode]);
 
@@ -58,7 +60,9 @@ function OnionVersusFlow(prop) {
                 id: `e${onion.id}-${onion.parent_onion}`,
                 source: onion.id.toString(),
                 target: onion.parent_onion.toString(),
-                markerStart: 'myCustomSvgMarker', markerEnd: { type: 'arrow', color: '#f00' },
+                markerStart: { type: 'arrowstart', color: '#000' },
+                markerEnd: { type: 'arrowclosed', color: '#000' },
+                style: { strokeWidth: 3, stroke: '#000' },
             };
 
             new_edge_list.push(newEdge);
@@ -71,6 +75,7 @@ function OnionVersusFlow(prop) {
             targetPosition: targetPosition,
             data: { label: onion.title },
             position: { x: 400 * new_node_list.length * loc_number + (400 * loc_number), y: 0 },
+            draggable: false,
         };
 
         newNode.style = {
@@ -97,7 +102,8 @@ function OnionVersusFlow(prop) {
         getVersusNodes(prop.versus_data);
     }, [getVersusNodes]);
 
-    const defaultViewport = { x: 380, y: 150, zoom: 0.8};
+    const screenWidth = window.innerWidth;
+    const defaultViewport = { x: screenWidth/4-15, y: 150, zoom: 0.8};
 
     // 노드 상세 페이지 이동
     const onNodeClick = (event, node) => {
@@ -172,6 +178,7 @@ function OnionVersusFlow(prop) {
                     defaultViewport={defaultViewport}
                     onNodeClick={onNodeClick}
                     onNodesChange={onNodesChange}
+                    onEdgesChange={onEdgesChange}
                 >
                     <Controls/>
                 </ReactFlow>
