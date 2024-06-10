@@ -39,6 +39,7 @@ function OnionFlow(props) {
     const [nodes, setNodes, onNodesChange] = useNodesState([]);
     const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
+    // 데이터 가져오기
     const getOnionData = async (onion_id) => {
         try {
             const response = await axios.get(`/api/onions/onionvisualize/${onion_id}`);
@@ -49,6 +50,7 @@ function OnionFlow(props) {
         }
     };
 
+    // 노드 생성
     const getOnionChildNodes = useCallback(async (onion_id, new_node_list = [], new_edge_list = []) => {
         const onion = await getOnionData(onion_id);
         if (!onion) return;
@@ -62,6 +64,8 @@ function OnionFlow(props) {
                 markerEnd: { type: 'arrow', color: '#f00' },
             };
             new_edge_list.push(newEdge);
+
+            // 랜더링 넣기
             setEdges(prevEdges => [...prevEdges, newEdge]);
         }
 
@@ -77,9 +81,13 @@ function OnionFlow(props) {
                     onion.color === "Purple" ? nodeStyles.purple : nodeStyles.red),
             }
         };
+
         new_node_list.push(newNode);
+
+        // 랜더링 넣기
         setNodes(prevNodes => [...prevNodes, newNode]);
 
+        // 하위가 있으면 재호출
         if (onion.next) {
             getOnionChildNodes(onion.next.id, new_node_list, new_edge_list);
         }
