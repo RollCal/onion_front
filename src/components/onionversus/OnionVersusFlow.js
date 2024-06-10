@@ -63,8 +63,8 @@ function OnionVersusFlow(prop) {
                     width: "350px",
                     display: "flex",
                     justifyContent: "center",
+                    alignItems: "center", // 수직으로 중앙 정렬
                     fontSize: "40px",
-                    paddingTop: "70px",
                     borderRadius: "10px",
                 };
 
@@ -84,7 +84,7 @@ function OnionVersusFlow(prop) {
         getVersusNodes(prop.versus_data);
     }, [getVersusNodes]);
 
-    const defaultViewport = { x: 350, y: 150, zoom: 1 };
+    const defaultViewport = { x: 380, y: 150, zoom: 0.8};
 
     // 노드 상세 페이지 이동
     const onNodeClick = (event, node) => {
@@ -117,8 +117,8 @@ function OnionVersusFlow(prop) {
                     </Text>
                 )}
                 <Grid>
-                    <GridItem colSpan={1} w='100%' h='10'>
-                        {ov_title}
+                    <GridItem colSpan={1} w='100%'>
+                        <Text fontSize={'30px'} ml={2} mb={2}>{ov_title}</Text>
                     </GridItem>
                 </Grid>
                 <Grid templateColumns={`repeat(${total_up_vote_cnt}, 1fr)`}>
@@ -139,7 +139,7 @@ function OnionVersusFlow(prop) {
             <div style={{
                 width: '70vw',
                 height: '500px',
-                border: '2px solid',
+                border: '6px solid',
                 marginTop: "10px",
                 marginBottom: "10px",
                 borderRadius: "10px",
