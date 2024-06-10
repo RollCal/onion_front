@@ -127,11 +127,11 @@ function OnionVersusFlow(prop) {
         return (
             <>
                 {highlight && (
-                    <Text color="red.500" fontSize="xl" mb="2">
+                    <Text color="red.500" fontSize="xl" mt={2} ml={2}>
                         {highlight}
                     </Text>
                 )}
-                <Grid pt={5}>
+                <Grid pt={0}>
                     <GridItem colSpan={1} w='100%'>
                         <Text fontSize={'30px'} ml={2} mb={2}>{ov_title}</Text>
                     </GridItem>
