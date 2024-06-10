@@ -7,14 +7,15 @@ function OnionVersus(props) {
     const [versusList, setVersusList] = useState([]);
     const [loading, setLoading] = useState(false);
     const [page, setPage] = useState(1);
-    const [order, setOrder] = useState('popular')
+    const [order, setOrder] = useState('popular');
     const [hasMore, setHasMore] = useState(true); // 더 이상 불러올 페이지가 있는지 여부
+
     const getVersusList = async (searchOrder, searchPage) => {
         try {
             setLoading(true);
             const response = await axios.get(`/api/onions/onionlist?order=${searchOrder}&search=&page=${searchPage}`);
             setVersusList(prevData => [...prevData, ...response.data.data]);
-            setHasMore(response.data.meta.num_page > searchPage); // 페이지 번호가 총 페이지 수보다 작거나 같으면 더 이상 불러올 페이지가 없음
+            setHasMore(response.data.meta.num_page > searchPage); // 페이지 번호가 총 페이지 수보다 작으면 더 이상 불러올 페이지가 없음
             setLoading(false);
         } catch (error) {
             setLoading(false);
@@ -22,12 +23,14 @@ function OnionVersus(props) {
     };
 
     useEffect(() => {
-        getVersusList(order, page);
+        if (hasMore) {
+            getVersusList(order, page);
+        }
     }, [page]);
 
     const observer = useRef();
     const lastItemElementRef = useCallback(node => {
-        if (loading) return;
+        if (loading || !hasMore) return;
         if (observer.current) observer.current.disconnect();
         observer.current = new IntersectionObserver(entries => {
             if (entries[0].isIntersecting && hasMore) {
@@ -41,30 +44,29 @@ function OnionVersus(props) {
         setVersusList([]);
         setOrder(newOrder);
         setPage(1);
+        setHasMore(true); // 새로운 정렬 방식 선택 시 더 불러올 데이터가 있다고 가정
     };
-    return (
 
+    return (
         <Box>
             <Box style={{display: "flex", justifyContent: "flex-end"}} gap={3}>
                 <Button colorScheme='gray' variant='outline' borderColor="black" border="2px"
                         onClick={() => handleOrderChange('popular')}>
                     인기순
                 </Button>
-                 <Button colorScheme='gray' variant='outline' borderColor="black" border="2px"
-                         onClick={() => handleOrderChange('latest')}>
+                <Button colorScheme='gray' variant='outline' borderColor="black" border="2px"
+                        onClick={() => handleOrderChange('latest')}>
                     최신순
                 </Button>
-                 <Button colorScheme='gray' variant='outline' borderColor="black" border="2px"
-                         onClick={() => handleOrderChange('old')}>
+                <Button colorScheme='gray' variant='outline' borderColor="black" border="2px"
+                        onClick={() => handleOrderChange('old')}>
                     날짜순
                 </Button>
             </Box>
             {versusList.map((item, index) => (
                 <OnionVersusFlow versus_data={item} key={index}/>
             ))}
-            {loading && <Box padding="40px">
-                Loding...
-            </Box>}
+            {loading && <Box padding="40px">Loading...</Box>}
             <div ref={lastItemElementRef}></div>
         </Box>
     );
