@@ -19,7 +19,7 @@ import {
 } from '@chakra-ui/react';
 
 
-function SignUpModal({ onRegister }) {
+function SignUpModal() {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
@@ -55,7 +55,6 @@ function SignUpModal({ onRegister }) {
 
             if (response.status === 201) {
                 setSuccess('Registration successful!');
-                onRegister();
                 onClose();
             } else {
                 setError(response.data.message || 'Failed to register');
@@ -81,10 +80,7 @@ function SignUpModal({ onRegister }) {
             if (response.status === 200) {
                 setEmailSent(true);
                 setError();
-                setSuccess('Confirmation email sent. Please check your email for the confirmation code.');
-            } else {
-                setSuccess();
-                setError(response.data.error || 'Failed to send confirmation email');
+                setSuccess(`${email}로 인증 메일이 전송되었습니다.`);
             }
         } catch (error) {
             setLoading(false);
