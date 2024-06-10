@@ -52,6 +52,7 @@ function Onions(props) {
 
             // 댓글 등록 대상 업데이트
             const response = await axios.get(`/api/onions/${onion_id}`, config);
+            console.log(response.data);
             setOnion(onion_id);
             setOnion_title(response.data.title);
             setOnion_color(response.data.color);
@@ -235,6 +236,7 @@ function Onions(props) {
                                 title: document.getElementById(`edit_input_${onion_id}`).value
                             }, config)
                                 .then(function (response) {
+                                    console.log(response.data);
                                     if (response.data.code === 200) {
                                         alert("정상적으로 수정되었습니다.");
                                         setOnion_title(document.getElementById(`edit_input_${onion_id}`).value);
@@ -243,7 +245,7 @@ function Onions(props) {
                                         document.getElementById(`edit_input_${onion_id}`).value = onion_title
                                     }
                                 })
-                                .catch(function (error){
+                                .catch(function (error) {
                                     if (error.response) {
                                         if (error.response.data.code === 403) {
                                             alert("글 작성자가 아닙니다.");
