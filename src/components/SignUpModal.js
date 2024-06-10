@@ -14,8 +14,10 @@ import {
     FormLabel,
     Input,
     Alert,
-    AlertIcon
+    AlertIcon,
+    Spinner
 } from '@chakra-ui/react';
+
 
 function SignUpModal({ onRegister }) {
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -31,6 +33,7 @@ function SignUpModal({ onRegister }) {
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
     const [emailSent, setEmailSent] = useState(false);
+    const [loading, setLoading] = useState(false);
 
 
     const handleRegister = async () => {
@@ -65,25 +68,32 @@ function SignUpModal({ onRegister }) {
     };
 
     const handleSendConfirmEmail = async () => {
+        setLoading(true);
         try {
             const response = await axios.post('/api/accounts/confirm/', {
                 email
             }, {
                 headers: {
                     'Content-Type': 'application/json',
-                },
+                }
             });
-
+            setLoading(false);
             if (response.status === 200) {
                 setEmailSent(true);
+                setError();
                 setSuccess('Confirmation email sent. Please check your email for the confirmation code.');
             } else {
+                setSuccess();
                 setError(response.data.error || 'Failed to send confirmation email');
             }
         } catch (error) {
-            console.error('Error sending confirmation email:', error);
-            const errorMessage = error.response?.data || 'An unexpected error occurred';
-            setError(JSON.stringify(errorMessage));
+            setLoading(false);
+            setSuccess();
+            if (error.response.status === 400) {
+                setError(error.response.data.error);
+            }else {
+                setError(error.message)
+            }
         }
     };
 
@@ -117,7 +127,7 @@ function SignUpModal({ onRegister }) {
                             <FormLabel>Email</FormLabel>
                             <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
                             <Button mt={2} colorScheme="blue" onClick={handleSendConfirmEmail} isDisabled={emailSent}>
-                                Send Confirmation Email
+                                {loading ? (<>Send Confirmation Email <Spinner marginLeft={3} /></>) : 'Send Confirmation Email'}
                             </Button>
                         </FormControl>
                         <FormControl id="confirm" mt={4} isDisabled={!emailSent}>

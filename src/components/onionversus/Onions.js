@@ -8,16 +8,15 @@ import {
     Box,
     Button,
     ButtonGroup,
-    Editable, EditableInput, EditablePreview,
     Flex, FocusLock, FormControl, FormLabel,
     IconButton, Input, Popover, PopoverArrow, PopoverCloseButton, PopoverContent, PopoverTrigger,
     Spacer, Stack,
     Tooltip, useDisclosure,
-    useEditableControls
 } from "@chakra-ui/react";
 import {FaArrowUp, FaArrowDown} from "react-icons/fa";
+import {MdCircle} from "react-icons/md";
 import {GlobalContext} from "../GlobalState";
-import {CheckIcon, CloseIcon, DeleteIcon, EditIcon} from "@chakra-ui/icons";
+import {DeleteIcon, EditIcon} from "@chakra-ui/icons";
 
 function Onions(props) {
 
@@ -69,9 +68,18 @@ function Onions(props) {
 
     // 댓글 렌더링
     const GetComments = ({comment, depth = 0},) => {
+        let icon_color = "#9747FF";
+        if (comment.color === "Orange") {
+            icon_color = "#F24822";
+        }
         return (
-            <div style={{margin: "10px"}}>
-                <h2><Link to={`/onion/${comment.id}`}>{comment.title}</Link></h2>
+            <div style={{display: "flex", alignItems: "center"}}>
+                <MdCircle style={{marginRight: "5px", color: icon_color}}/>
+                <div style={{margin: "10px"}}>
+                    <Link to={`/onion/${comment.id}`}>
+                        {comment.title}
+                    </Link>
+                </div>
             </div>
         )
     }
@@ -99,10 +107,10 @@ function Onions(props) {
                     } else {
                         setIsVote("Down");
                     }
-                    alert("정상적으로 투표하였습니다.");
+                    // alert("정상적으로 투표하였습니다.");
                 } else {
                     setIsVote(null);
-                    alert("투표가 취소되었습니다.");
+                    // alert("투표가 취소되었습니다.");
                 }
             })
             .catch(function (erorr) {
@@ -127,9 +135,9 @@ function Onions(props) {
         }, config)
             .then(function (response) {
                 if (response.status === 200) {
-                    alert("정상적으로 투표하였습니다.");
+                    // alert("정상적으로 투표하였습니다.");
                 } else {
-                    alert("투표가 취소되었습니다.");
+                    // alert("투표가 취소되었습니다.");
                 }
             })
             .catch(function (erorr) {

@@ -1,17 +1,40 @@
-import React, { useEffect, useCallback } from 'react';
-import ReactFlow, { Controls, useEdgesState, useNodesState } from 'reactflow';
+import React, {useEffect, useCallback} from 'react';
+import ReactFlow, {Controls, useEdgesState, useNodesState} from 'reactflow';
 import 'reactflow/dist/style.css';
 import axios from "axios";
-import { useNavigate } from "react-router";
-import { Box, Grid, GridItem, Text } from "@chakra-ui/react";
+import {useNavigate} from "react-router";
+import {Box, Grid, GridItem, Text} from "@chakra-ui/react";
+import './css/node.css';
 
 function OnionVersusFlow(prop) {
-    const [nodes, setNodes] = useNodesState([]);
+    const [nodes, setNodes, onNodesChange] = useNodesState([]);
     const [edges, setEdges] = useEdgesState([]);
     const navigate = useNavigate();
 
-    // 최상위 노드 생성
+    // 최상위 노드 에서 부터 하위 노드 생성
     const getVersusNodes = useCallback((versus_data) => {
+
+        // VS 이미지 노드 생성
+        const newVSNode = {
+            id: "vs",
+            position: {x: 25, y: 0},
+            draggable: false,
+        };
+
+        const img = new Image();
+        img.src = "/images/vs_img.png";
+        newVSNode.style = {
+            backgroundImage: "url('/images/vs_img.png')",
+            backgroundRepeat: "no-repeat",
+            backgroundSize: "cover",
+            width: img.naturalWidth,
+            height: img.naturalHeight,
+            borderColor: "white",
+        }
+
+        setNodes(prevNodes => [...prevNodes, newVSNode]);
+
+
         const orange_onion = versus_data.orange_onion;
         const purple_onion = versus_data.purple_onion;
 
@@ -41,7 +64,7 @@ function OnionVersusFlow(prop) {
                         id: `e${onion.id}-${onion.parent_onion}`,
                         source: onion.id.toString(),
                         target: onion.parent_onion.toString(),
-                        markerStart: 'myCustomSvgMarker', markerEnd: { type: 'arrow', color: '#f00' },
+                        markerStart: 'myCustomSvgMarker', markerEnd: {type: 'arrow', color: '#f00'},
                     };
 
                     new_edge_list.push(newEdge);
@@ -52,8 +75,8 @@ function OnionVersusFlow(prop) {
                     id: onion.id.toString(),
                     sourcePosition: sourcePosition,
                     targetPosition: targetPosition,
-                    data: { label: onion.title },
-                    position: { x: 400 * new_node_list.length * loc_number + (200 * loc_number), y: 0 },
+                    data: {label: onion.title},
+                    position: {x: 400 * new_node_list.length * loc_number + (400 * loc_number), y: 0},
                 };
 
                 newNode.style = {
@@ -88,7 +111,9 @@ function OnionVersusFlow(prop) {
 
     // 노드 상세 페이지 이동
     const onNodeClick = (event, node) => {
-        navigate(`/onion/${node.id}`);
+        if (node.id !== "vs") {
+            navigate(`/onion/${node.id}`);
+        }
     };
 
     // 투표 그래프와 versus 제목 및 하이라이트 레이아웃
@@ -125,7 +150,8 @@ function OnionVersusFlow(prop) {
                     <GridItem colSpan={orange_up_vote_cnt} w='100%' h='10' bg='#F24822' color="white" p={2} pl={5}>
                         {orange_onion_title}
                     </GridItem>
-                    <GridItem colSpan={purple_up_vote_cnt} w='100%' h='10' bg='#9747FF' align='right' color="white" p={2} pr={5}>
+                    <GridItem colSpan={purple_up_vote_cnt} w='100%' h='10' bg='#9747FF' align='right' color="white"
+                              p={2} pr={5}>
                         {purple_onion_title}
                     </GridItem>
                 </Grid>
@@ -135,8 +161,8 @@ function OnionVersusFlow(prop) {
 
     return (
         <Box p="10">
-            <VersusInfo />
-            <div style={{
+            <VersusInfo/>
+            <Box style={{
                 width: '70vw',
                 height: '500px',
                 border: '6px solid',
@@ -150,10 +176,11 @@ function OnionVersusFlow(prop) {
                     edges={edges}
                     defaultViewport={defaultViewport}
                     onNodeClick={onNodeClick}
+                    onNodesChange={onNodesChange}
                 >
-                    <Controls />
+                    <Controls/>
                 </ReactFlow>
-            </div>
+            </Box>
         </Box>
     );
 }

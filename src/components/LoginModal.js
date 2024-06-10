@@ -49,7 +49,6 @@ function LoginModal() {
                 localStorage.setItem('loginTime', new Date().getTime());
                 onClose();
                 Login(true);
-                console.log(Login);
             } else {
                 setError(response.data.message || 'Failed to log in');
             }
