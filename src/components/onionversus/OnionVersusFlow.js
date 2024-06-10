@@ -3,12 +3,13 @@ import ReactFlow, {Controls, useEdgesState, useNodesState} from 'reactflow';
 import 'reactflow/dist/style.css';
 import axios from "axios";
 import {useNavigate} from "react-router";
-import {Box, Grid, GridItem, Text} from "@chakra-ui/react";
+import {Box, Grid, GridItem, Text, useMediaQuery} from "@chakra-ui/react";
 import './css/node.css';
 
 function OnionVersusFlow(prop) {
     const [nodes, setNodes, onNodesChange] = useNodesState([]);
     const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+    const [isMobileView] = useMediaQuery("(max-width: 1050px)");
     const navigate = useNavigate();
     // 최상위 노드 에서 부터 하위 노드 생성
     const getVersusNodes = useCallback((versus_data) => {
@@ -161,11 +162,11 @@ function OnionVersusFlow(prop) {
     };
 
     return (
-        <Box p="0" width='100%' borderBottom='2px solid lightgray'>
+        <Box p="0" width='100%' borderBottom='2px solid lightgray' mb={5}>
             <VersusInfo/>
             <Box style={{
                 width: '100%',
-                height: '500px',
+                height: isMobileView ? '300px' : '500px',
                 border: '2px solid grey',
                 borderTop: 'None',
                 marginBottom: "10px",

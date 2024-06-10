@@ -1,16 +1,16 @@
 import React, { useContext, useEffect } from 'react';
-import { Box, Button, ButtonGroup, Text, Flex, Grid, GridItem, Image, Spacer, Tooltip } from '@chakra-ui/react';
+import { Box, Button, ButtonGroup, Flex, Grid, GridItem, Image, Spacer, Tooltip, useMediaQuery } from '@chakra-ui/react';
 import { Link } from "react-router-dom";
 import SignUpModal from "./SignUpModal";
 import LoginModal from "./LoginModal";
 import { AddIcon } from '@chakra-ui/icons';
 import { useNavigate } from "react-router";
-import { FaGithubSquare, FaGithub } from "react-icons/fa";
 import { GlobalContext } from "./GlobalState";
 
 function Layout(props) {
     const navigate = useNavigate();
     const { isLoggedIn, Login, Logout } = useContext(GlobalContext);
+    const [isMobileView] = useMediaQuery("(max-width: 1050px)");
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -57,14 +57,24 @@ function Layout(props) {
             width='100%'
         >
             <GridItem area={'header'} display="flex" alignItems="center" justifyContent="space-evenly">
-                <Flex width='100%' alignItems='center' gap='2' justifyContent="space-between" display="flex" flexDirection="row" pl='3%' pr='3%' borderBottom='1px solid black'>
-                    <Box>
+                <Flex
+                    width='100%'
+                    alignItems='center'
+                    gap='2'
+                    justifyContent="space-between"
+                    display="flex"
+                    flexDirection="row"
+                    pl='3%'
+                    pr='3%'
+                    borderBottom='1px solid black'
+                >
+                    <Box display={isMobileView ? 'none' : 'block'}>
                         <Link to="/">
                             <Image src="/images/logo.png" alt="Logo"/>
                         </Link>
                     </Box>
                     <Spacer/>
-                    <Box>
+                    <Box mt={isMobileView ? '145px' : '0'}>
                         {isLoggedIn ? (
                             <ButtonGroup gap='2'>
                                 <Tooltip label='Create Onion Versus'>
