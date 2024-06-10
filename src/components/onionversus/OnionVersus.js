@@ -1,29 +1,40 @@
-import React, {useEffect, useState, useRef, useCallback} from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import axios from "axios";
 import OnionVersusFlow from "./OnionVersusFlow";
-import {Box, Button} from "@chakra-ui/react";
+import { Box, Button, Input } from "@chakra-ui/react";
 
 function OnionVersus(props) {
     const [versusList, setVersusList] = useState([]);
     const [loading, setLoading] = useState(false);
     const [page, setPage] = useState(1);
-    const [order, setOrder] = useState('popular')
-    const [hasMore, setHasMore] = useState(true); // 더 이상 불러올 페이지가 있는지 여부
-    const getVersusList = async (searchOrder, searchPage) => {
+    const [hasMore, setHasMore] = useState(true);
+    const [order, setOrder] = useState("latest");
+    const [search, setSearch] = useState("");
+    const [pendingSearch, setPendingSearch] = useState("");
+
+    const getVersusList = async (pageNumber, reset = false) => {
         try {
             setLoading(true);
-            const response = await axios.get(`/api/onions/onionlist?order=${searchOrder}&search=&page=${searchPage}`);
-            setVersusList(prevData => [...prevData, ...response.data.data]);
-            setHasMore(response.data.meta.num_page > searchPage); // 페이지 번호가 총 페이지 수보다 작거나 같으면 더 이상 불러올 페이지가 없음
+            const searchParam = search? `search:${search}` : '';
+            const response = await axios.get(`/api/onions/onionlist?order=${order}${searchParam}&page=${pageNumber}`);
+            setVersusList(prevData => reset? response.data.data : [...prevData,...response.data.data]);
+            setHasMore(response.data.meta.num_page > pageNumber);
             setLoading(false);
         } catch (error) {
             setLoading(false);
+            console.error(error);
         }
     };
 
     useEffect(() => {
-        getVersusList(order, page);
+        getVersusList(page);
     }, [page]);
+
+    useEffect(() => {
+        setPage(1);
+        setVersusList([]);
+        getVersusList(1, true);
+    }, [order, search]);
 
     const observer = useRef();
     const lastItemElementRef = useCallback(node => {
@@ -33,38 +44,62 @@ function OnionVersus(props) {
             if (entries[0].isIntersecting && hasMore) {
                 setPage(prevPage => prevPage + 1);
             }
-        }, {threshold: 0.5}); // 스크롤이 끝에 가까워졌을 때 콜백을 트리거
+        }, { threshold: 0.5 });
         if (node) observer.current.observe(node);
     }, [loading, hasMore]);
 
     const handleOrderChange = (newOrder) => {
-        setVersusList([]);
         setOrder(newOrder);
-        setPage(1);
     };
-    return (
 
+    const handlePendingSearchChange = (event) => {
+        setPendingSearch(event.target.value);
+    };
+
+    const handleSearchSubmit = (event) => {
+        event.preventDefault();
+        setSearch(pendingSearch);
+    };
+
+    return (
         <Box>
-            <Box style={{display: "flex", justifyContent: "flex-end"}} gap={3}>
-                <Button colorScheme='gray' variant='outline' borderColor="black" border="2px"
-                        onClick={() => handleOrderChange('popular')}>
+            <Box display="flex" justifyContent="space-between" alignItems="center" mb={4}>
+                <Button colorScheme="gray" variant="outline" borderColor="black" border="2px" onClick={() => handleOrderChange('popular')}>
                     인기순
                 </Button>
-                 <Button colorScheme='gray' variant='outline' borderColor="black" border="2px"
-                         onClick={() => handleOrderChange('latest')}>
+                <Button colorScheme="gray" variant="outline" borderColor="black" border="2px" onClick={() => handleOrderChange('latest')}>
                     최신순
                 </Button>
-                 <Button colorScheme='gray' variant='outline' borderColor="black" border="2px"
-                         onClick={() => handleOrderChange('old')}>
+                <Button colorScheme="gray" variant="outline" borderColor="black" border="2px" onClick={() => handleOrderChange('old')}>
                     날짜순
                 </Button>
+                <Box flex="1"></Box>
+                <Input
+                    type="text"
+                    value={pendingSearch}
+                    onChange={handlePendingSearchChange}
+                    placeholder="검색어를 입력하세요"
+                    size="md"
+                    bg="white"
+                    _placeholder={{ color: "gray.500" }}
+                    borderRadius="lg"
+                    borderWidth="1px"
+                    borderColor="gray.300"
+                    boxShadow="sm"
+                    p={2}
+                    w="400px"
+                />
+                <Button colorScheme="purple" variant="solid" type="submit" form="searchForm">
+                    검색
+                </Button>
             </Box>
+            <form id="searchForm" onSubmit={handleSearchSubmit}>
+                {/* 검색 폼 컨텐츠 */}
+            </form>
             {versusList.map((item, index) => (
-                <OnionVersusFlow versus_data={item} key={index}/>
+                <OnionVersusFlow versus_data={item} key={index} />
             ))}
-            {loading && <Box padding="40px">
-                Loding...
-            </Box>}
+            {loading && <Box padding="40px">Loding...</Box>}
             <div ref={lastItemElementRef}></div>
         </Box>
     );
