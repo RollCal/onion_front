@@ -10,6 +10,7 @@ function OnionVersusFlow(prop) {
     const [nodes, setNodes, onNodesChange] = useNodesState([]);
     const [edges, setEdges] = useEdgesState([]);
     const navigate = useNavigate();
+
     // 최상위 노드 에서 부터 하위 노드 생성
     const getVersusNodes = useCallback((versus_data) => {
 
@@ -33,64 +34,73 @@ function OnionVersusFlow(prop) {
 
         setNodes(prevNodes => [...prevNodes, newVSNode]);
 
+
         const orange_onion = versus_data.orange_onion;
         const purple_onion = versus_data.purple_onion;
+
         // 하위 노드 생성
-        getNextNodes(orange_onion, "orange");
-        getNextNodes(purple_onion);
+        getNextNodes(orange_onion.id, "orange");
+        getNextNodes(purple_onion.id);
     }, []);
 
     // 하위 노드 생성 함수
-    const getNextNodes = useCallback(async (onion, type = "purple", new_node_list = [], new_edge_list = []) => {
+    const getNextNodes = useCallback((onion_id, type = "purple", new_node_list = [], new_edge_list = []) => {
+        axios.get(`/api/onions/onionvisualize/${onion_id}`)
+            .then(function (response) {
+                const onion = response.data;
 
-        let loc_number = 1;
-        let sourcePosition = 'left';
-        let targetPosition = 'right';
+                let loc_number = 1;
+                let sourcePosition = 'left';
+                let targetPosition = 'right';
 
-        if (type !== "purple") {
-            loc_number = -1;
-            sourcePosition = 'right';
-            targetPosition = 'left';
-        }
+                if (type !== "purple") {
+                    loc_number = -1;
+                    sourcePosition = 'right';
+                    targetPosition = 'left';
+                }
 
-        if (onion.parent_onion) {
-            const newEdge = {
-                id: `e${onion.id}-${onion.parent_onion}`,
-                source: onion.id.toString(),
-                target: onion.parent_onion.toString(),
-                markerStart: 'myCustomSvgMarker', markerEnd: { type: 'arrow', color: '#f00' },
-            };
+                if (onion.parent_onion) {
+                    const newEdge = {
+                        id: `e${onion.id}-${onion.parent_onion}`,
+                        source: onion.id.toString(),
+                        target: onion.parent_onion.toString(),
+                        markerStart: 'myCustomSvgMarker', markerEnd: {type: 'arrow', color: '#f00'},
+                    };
 
-            new_edge_list.push(newEdge);
-            setEdges(prevEdges => [...prevEdges, newEdge]);
-        }
+                    new_edge_list.push(newEdge);
+                    setEdges(prevEdges => [...prevEdges, newEdge]);
+                }
 
-        const newNode = {
-            id: onion.id.toString(),
-            sourcePosition: sourcePosition,
-            targetPosition: targetPosition,
-            data: { label: onion.title },
-            position: { x: 400 * new_node_list.length * loc_number + (400 * loc_number), y: 0 },
-        };
+                const newNode = {
+                    id: onion.id.toString(),
+                    sourcePosition: sourcePosition,
+                    targetPosition: targetPosition,
+                    data: {label: onion.title},
+                    position: {x: 400 * new_node_list.length * loc_number + (400 * loc_number), y: 0},
+                };
 
-        newNode.style = {
-            backgroundColor: onion.color === "Purple" ? "#9747FF" : "#F24822",
-            color: "white",
-            height: "200px",
-            width: "350px",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center", // 수직으로 중앙 정렬
-            fontSize: "40px",
-            borderRadius: "10px",
-        };
+                newNode.style = {
+                    backgroundColor: onion.color === "Purple" ? "#9747FF" : "#F24822",
+                    color: "white",
+                    height: "200px",
+                    width: "350px",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center", // 수직으로 중앙 정렬
+                    fontSize: "40px",
+                    borderRadius: "10px",
+                };
 
-        new_node_list.push(newNode);
-        setNodes(prevNodes => [...prevNodes, newNode]);
+                new_node_list.push(newNode);
+                setNodes(prevNodes => [...prevNodes, newNode]);
 
-        if (onion.next) {
-            await getNextNodes(onion.next, type, new_node_list, new_edge_list);
-        }
+                if (onion.next) {
+                    getNextNodes(onion.next.id, type, new_node_list, new_edge_list);
+                }
+            })
+            .catch(function (error) {
+                console.error(error);
+            });
     }, []);
 
     useEffect(() => {
