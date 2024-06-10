@@ -9,14 +9,12 @@ function OnionVersus(props) {
     const [page, setPage] = useState(1);
     const [hasMore, setHasMore] = useState(true);
     const [order, setOrder] = useState("");
-    const [search, setSearch] = useState("");
     const [pendingSearch, setPendingSearch] = useState("");
 
     const getVersusList = async (pageNumber, reset = false) => {
         try {
             setLoading(true);
-            const searchParam = search? `search:${search}` : '';
-            const response = await axios.get(`/api/onions/onionlist?order=${order}${searchParam}&page=${pageNumber}`);
+            const response = await axios.get(`/api/onions/onionlist?order=${order}&page=${pageNumber}`);
             setVersusList(prevData => reset? response.data.data : [...prevData,...response.data.data]);
             setHasMore(response.data.meta.num_page > pageNumber);
             setLoading(false);
@@ -31,10 +29,13 @@ function OnionVersus(props) {
     }, [page]);
 
     useEffect(() => {
-        setPage(1);
         setVersusList([]);
-        getVersusList(1, true);
-    }, [order, search]);
+        if (page !== 1) {
+            setPage(1);
+        } else {
+            getVersusList(1, true);
+        }
+    }, [order]);
 
     const observer = useRef();
     const lastItemElementRef = useCallback(node => {
@@ -58,7 +59,7 @@ function OnionVersus(props) {
 
     const handleSearchSubmit = (event) => {
         event.preventDefault();
-        setSearch(pendingSearch);
+        setOrder(`search: ${pendingSearch}`);
     };
 
     return (
