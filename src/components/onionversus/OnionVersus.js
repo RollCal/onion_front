@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import axios from "axios";
 import OnionVersusFlow from "./OnionVersusFlow";
-import { Box, Button, Input, InputGroup, InputLeftElement } from "@chakra-ui/react";
+import { Box, Button, Input, InputGroup, InputLeftElement, useMediaQuery } from "@chakra-ui/react";
 import { SearchIcon } from '@chakra-ui/icons';
 
 function OnionVersus(props) {
@@ -11,12 +11,13 @@ function OnionVersus(props) {
     const [hasMore, setHasMore] = useState(true);
     const [order, setOrder] = useState("popular");
     const [pendingSearch, setPendingSearch] = useState("");
+    const [isMobileView] = useMediaQuery("(max-width: 1050px)");
 
     const getVersusList = async (pageNumber, reset = false) => {
         try {
             setLoading(true);
             const response = await axios.get(`/api/onions/onionlist?order=${order}&page=${pageNumber}`);
-            setVersusList(prevData => reset? response.data.data : [...prevData,...response.data.data]);
+            setVersusList(prevData => reset ? response.data.data : [...prevData, ...response.data.data]);
             setHasMore(response.data.meta.num_page > pageNumber);
             setLoading(false);
         } catch (error) {
@@ -71,41 +72,44 @@ function OnionVersus(props) {
             handleSearchSubmit(event);
         }
     };
+
     return (
         <Box position="relative">
-            <Box display="flex" justifyContent="space-between" alignItems="center" mb={4}>
-                <Button
-                    backgroundColor={order === 'popular' ? '#F24822' : 'transparent'}
-                    color={order === 'popular' ? 'white' : 'black'}
-                    borderColor="black"
-                    border="2px"
-                    mr='5px'
-                    onClick={() => handleOrderChange('popular')}
-                >
-                    인기순
-                </Button>
-                <Button
-                    backgroundColor={order === 'latest' ? '#F24822' : 'transparent'}
-                    color={order === 'latest' ? 'white' : 'black'}
-                    borderColor="black"
-                    border="2px"
-                    mr='5px'
-                    onClick={() => handleOrderChange('latest')}
-                >
-                    최신순
-                </Button>
-                <Button
-                    backgroundColor={order === 'old' ? '#F24822' : 'transparent'}
-                    color={order === 'old' ? 'white' : 'black'}
-                    borderColor="black"
-                    border="2px"
-                    mr='5px'
-                    onClick={() => handleOrderChange('old')}
-                >
-                    날짜순
-                </Button>
-                <Box flex="1"></Box>
-            </Box>
+            {!isMobileView && (
+                <Box display="flex" justifyContent="space-between" alignItems="center" mb={4}>
+                    <Button
+                        backgroundColor={order === 'popular' ? '#F24822' : 'transparent'}
+                        color={order === 'popular' ? 'white' : 'black'}
+                        borderColor="black"
+                        border="2px"
+                        mr='5px'
+                        onClick={() => handleOrderChange('popular')}
+                    >
+                        인기순
+                    </Button>
+                    <Button
+                        backgroundColor={order === 'latest' ? '#F24822' : 'transparent'}
+                        color={order === 'latest' ? 'white' : 'black'}
+                        borderColor="black"
+                        border="2px"
+                        mr='5px'
+                        onClick={() => handleOrderChange('latest')}
+                    >
+                        최신순
+                    </Button>
+                    <Button
+                        backgroundColor={order === 'old' ? '#F24822' : 'transparent'}
+                        color={order === 'old' ? 'white' : 'black'}
+                        borderColor="black"
+                        border="2px"
+                        mr='5px'
+                        onClick={() => handleOrderChange('old')}
+                    >
+                        날짜순
+                    </Button>
+                    <Box flex="1"></Box>
+                </Box>
+            )}
             <Box
                 position="absolute"
                 top="-83px"
