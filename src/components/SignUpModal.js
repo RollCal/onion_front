@@ -35,8 +35,60 @@ function SignUpModal() {
     const [emailSent, setEmailSent] = useState(false);
     const [loading, setLoading] = useState(false);
 
+    const validatePassword = (password) => {
+        // 최소 8자, 하나 이상의 영문과 하나 이상의 숫자 또는 특수 문자를 포함
+        const regex = /^(?=.*[A-Za-z])(?=.*\d|.*[!@#$%^&*()_+=-])[A-Za-z\d!@#$%^&*()_+=-]{8,}$/;
+        return regex.test(password);
+    };
+
+    const validateEmail = (email) => {
+        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return regex.test(email);
+    };
+
+    const validateBirth = (birth) => {
+        const birthDate = new Date(birth);
+        const minDate = new Date('1900-01-01');
+        const maxDate = new Date();
+        return birthDate >= minDate && birthDate <= maxDate;
+    };
 
     const handleRegister = async () => {
+        if (!username || !password || !password2 || !email || !nickname || !selectedGender || !birth || !confirm) {
+            setError('입력되지 않은 정보가 있습니다.');
+            return;
+        }
+
+        if (!validateEmail(email)) {
+            setError('유효한 이메일 주소를 입력하세요.');
+            return;
+        }
+
+        if (!validateBirth(birth)) {
+            setError('입력된 생년월일이 정확한지 확인해주세요.');
+            return;
+        }
+
+        if (password !== password2) {
+            setError('비밀번호가 일치하지 않습니다.');
+            return;
+        }
+
+        if (!validatePassword(password)) {
+            setError('비밀번호는 최소 8자 이상, 하나 이상의 영문과 하나 이상의 숫자 혹은 특수 문자(!@#$%^&*()_+=-)가 포함되어야 합니다.');
+            return;
+        }
+
+        if (username.length < 4) {
+            setError('username의 길이는 최소 4글자 이상이어야 합니다.');
+            return;
+        }
+
+        if (nickname.length < 2) {
+            setError('nickname의 길이는 최소 2글자 이상이어야 합니다.');
+            return;
+        }
+
         try {
             const response = await axios.post('/api/accounts/signup/', {
                 username,
