@@ -18,14 +18,8 @@ const nodeStyles = {
     purple: {
         backgroundColor: "#9747FF",
     },
-    lightPurple: {
-        backgroundColor: "#D8BFFF",
-    },
     red: {
         backgroundColor: "#F24822",
-    },
-    lightRed: {
-        backgroundColor: "#FFA07A",
     },
     selectedPurple: {
         backgroundColor: "#D8BFFF",
