@@ -1,8 +1,8 @@
-import React, { useEffect, useState, useRef, useCallback } from 'react';
+import React, {useEffect, useState, useRef, useCallback} from 'react';
 import axios from "axios";
 import OnionVersusFlow from "./OnionVersusFlow";
-import { Box, Button, Input, InputGroup, InputLeftElement, useMediaQuery } from "@chakra-ui/react";
-import { SearchIcon } from '@chakra-ui/icons';
+import {Box, Button, Input, InputGroup, InputLeftElement, Skeleton, Stack, useMediaQuery} from "@chakra-ui/react";
+import {SearchIcon} from '@chakra-ui/icons';
 
 function OnionVersus(props) {
     const [versusList, setVersusList] = useState([]);
@@ -47,7 +47,7 @@ function OnionVersus(props) {
             if (entries[0].isIntersecting && hasMore) {
                 setPage(prevPage => prevPage + 1);
             }
-        }, { threshold: 0.5 });
+        }, {threshold: 0.5});
         if (node) observer.current.observe(node);
     }, [loading, hasMore]);
 
@@ -125,7 +125,7 @@ function OnionVersus(props) {
             >
                 <InputGroup>
                     <InputLeftElement pointerEvents="none">
-                        <SearchIcon color="gray.300" />
+                        <SearchIcon color="gray.300"/>
                     </InputLeftElement>
                     <Input
                         type="text"
@@ -144,13 +144,20 @@ function OnionVersus(props) {
                     />
                 </InputGroup>
             </Box>
-            <form id="searchForm" onSubmit={handleSearchSubmit} style={{ display: 'none' }}>
+            <form id="searchForm" onSubmit={handleSearchSubmit} style={{display: 'none'}}>
                 {/* 검색 폼 컨텐츠 */}
             </form>
             {versusList.map((item, index) => (
-                <OnionVersusFlow versus_data={item} key={index} />
+                <OnionVersusFlow versus_data={item} key={index}/>
             ))}
-            {loading && <Box padding="40px">Loading...</Box>}
+            {loading &&
+                <Box padding="40px">
+                    <Stack>
+                        <Skeleton width='100%' height='500px'/>
+                        <Skeleton width='100%' height='500px'/>
+                        <Skeleton width='100%' height='500px'/>
+                    </Stack>
+                </Box>}
             <div ref={lastItemElementRef}></div>
         </Box>
     );
