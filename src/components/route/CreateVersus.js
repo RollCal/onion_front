@@ -1,5 +1,6 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
+    Alert, AlertIcon,
     Box,
     Button, ButtonGroup,
     Card,
@@ -15,8 +16,10 @@ import axios from "axios";
 import {useNavigate} from "react-router";
 
 function CreateVersus(props) {
+    const [error, setError] = useState('');
     const navigate = useNavigate();
     const VersusCreateButtonHandler = () => {
+        setError();
         // 로컬스토리지에서 토큰 가져오기
         const token = localStorage.getItem("token");
         // 헤더에 넣기
@@ -33,6 +36,21 @@ function CreateVersus(props) {
         const orange_title = document.getElementById("orange_title").value;
         // input purple_title에서 가져오기
         const purple_title = document.getElementById("purple_title").value;
+
+        if (!versus_title) {
+            setError("Versus Title을 입력해주세요.");
+            return;
+        }
+
+        if (!orange_title) {
+            setError("Orange Title을 입력해주세요.");
+            return;
+        }
+
+        if (!purple_title) {
+            setError("Purple Title을 입력해주세요.");
+            return;
+        }
 
         axios.post("/api/onions/onionlist/", {
             title: versus_title,
@@ -53,13 +71,21 @@ function CreateVersus(props) {
         <Layout>
             <Box style={{display: 'flex', justifyContent: 'center'}} gap={3}>
                 <Grid templateColumns="repeat(2, 1fr)" gap={6}>
+                    <GridItem colSpan={2}>
+                        {error && (
+                            <Alert status="error" mb={4}>
+                                <AlertIcon/>
+                                {error}
+                            </Alert>
+                        )}
+                    </GridItem>
                     {/* 첫 번째 카드에 colSpan={2} 속성 적용 */}
                     <GridItem colSpan={2}>
                         <Card border='2px' borderColor='red.300'>
                             <CardBody>
                                 <InputGroup>
                                     <InputLeftAddon>Onion Versus Title</InputLeftAddon>
-                                    <Input type='text' id="versus_title" placeholder='Orange Title'/>
+                                    <Input type='text' id="versus_title" placeholder='Versus Title' maxLength={30}/>
                                 </InputGroup>
                             </CardBody>
                         </Card>
@@ -72,7 +98,7 @@ function CreateVersus(props) {
                             <CardBody>
                                 <InputGroup>
                                     <InputLeftAddon>Orange Title</InputLeftAddon>
-                                    <Input type='text' id="orange_title" placeholder='Orange Title'/>
+                                    <Input type='text' id="orange_title" placeholder='Orange Title' maxLength={30}/>
                                 </InputGroup>
                             </CardBody>
                         </Card>
@@ -85,7 +111,7 @@ function CreateVersus(props) {
                             <CardBody>
                                 <InputGroup>
                                     <InputLeftAddon>Purple Title</InputLeftAddon>
-                                    <Input type='text' id="purple_title" placeholder='Purple Title'/>
+                                    <Input type='text' id="purple_title" placeholder='Purple Title' maxLength={30}/>
                                 </InputGroup>
                             </CardBody>
                         </Card>

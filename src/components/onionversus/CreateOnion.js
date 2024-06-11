@@ -1,10 +1,13 @@
-import React from 'react';
-import {Button, Input, InputGroup, InputRightElement} from "@chakra-ui/react";
+import React, {useState} from 'react';
+import {Alert, AlertIcon, Button, Input, InputGroup, InputRightElement} from "@chakra-ui/react";
 import {FaLongArrowAltRight} from "react-icons/fa";
 import axios from "axios";
 
 function CreateOnion(props) {
+
+    const [error, setError] = useState('');
     const OnionCreateButtonHandler = () => {
+        setError();
         // 로컬스토리지에서 토큰 가져오기
         const token = localStorage.getItem("token");
         // 헤더에 넣기
@@ -15,6 +18,12 @@ function CreateOnion(props) {
             }
         };
 
+
+        if (!document.getElementById("onion_title").value) {
+            setError("내용을 입력해주세요.");
+            return;
+        }
+
         axios.post(`/api/onions/${props.onion_id}`, {
             title: document.getElementById("onion_title").value,
             color: document.getElementById("onion_color").value
@@ -23,7 +32,7 @@ function CreateOnion(props) {
                 // 부모노드에서 함수 가져오기
                 props.setOnionList(preOnionList => [...preOnionList, response.data]);
                 // 입력값 초기화
-                document.getElementById("onion_title").value="";
+                document.getElementById("onion_title").value = "";
                 document.getElementById("onion_color").selectedIndex = 0;
             })
             .catch(function (error) {
@@ -34,6 +43,12 @@ function CreateOnion(props) {
 
     return (
         <>
+            {error && (
+                <Alert status="error" mb={4}>
+                    <AlertIcon/>
+                    {error}
+                </Alert>
+            )}
             <InputGroup>
                 <InputRightElement width='150px'>
                     <select id="onion_color">

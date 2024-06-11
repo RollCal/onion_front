@@ -28,6 +28,14 @@ function LoginModal() {
 
     const handleLogin = async () => {
         try {
+            if (!document.getElementById("user_id").value) {
+                setError("유저네임을 입력해주세요.");
+                return;
+            }
+            if (!document.getElementById("user_pw").value) {
+                setError("비밀번호를 입력해주세요.");
+                return;
+            }
             const response = await axios.post('/api/accounts/login/', {
                 username,
                 password,
@@ -39,9 +47,6 @@ function LoginModal() {
 
             if (response.status === 200) {
                 const { access, refresh } = response.data;
-                console.log('Server Response:', response.data);
-                console.log('Access Token:', access);
-                console.log('Refresh Token:', refresh);
 
                 localStorage.setItem('username', username);
                 localStorage.setItem('token', access);
@@ -49,25 +54,23 @@ function LoginModal() {
                 localStorage.setItem('loginTime', new Date().getTime());
                 onClose();
                 Login(true);
-                console.log(Login);
-            } else {
-                setError(response.data.message || 'Failed to log in');
             }
-
         } catch (error) {
-            console.error('Error during login:', error);
-            setError(error.response?.data?.message || 'An unexpected error occurred');
+            if (400 <= error.response.status && error.response.status < 500){
+                setError('유저네임 혹은 비밀번호가 존재하지 않습니다.');
+                return;
+            }
         }
     };
 
     return (
         <>
-            <Button colorScheme='purple' onClick={onOpen}>Log in</Button>
+            <Button colorScheme='purple' onClick={onOpen}>로그인</Button>
 
             <Modal isOpen={isOpen} onClose={onClose}>
                 <ModalOverlay />
                 <ModalContent>
-                    <ModalHeader>Log in</ModalHeader>
+                    <ModalHeader>로그인</ModalHeader>
                     <ModalCloseButton />
                     <ModalBody>
                         {error && (
@@ -78,11 +81,11 @@ function LoginModal() {
                         )}
                         <FormControl id="username">
                             <FormLabel>Username</FormLabel>
-                            <Input type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
+                            <Input id="user_id" type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
                         </FormControl>
                         <FormControl id="password" mt={4}>
                             <FormLabel>Password</FormLabel>
-                            <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+                            <Input id="user_pw" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
                         </FormControl>
                     </ModalBody>
 
