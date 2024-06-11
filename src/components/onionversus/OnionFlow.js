@@ -123,7 +123,7 @@ function OnionFlow(props) {
                 position: { x: 400 * new_node_list.length * -1 - 400, y: 0 },
                 style: {
                     ...nodeStyles.default,
-                    ...(parentOnion.color === "Purple" ? nodeStyles.lightPurple : nodeStyles.lightRed),
+                    ...(parentOnion.color === "Purple" ? nodeStyles.purple : nodeStyles.red),
                 }
             };
             new_node_list.push(newNode);
