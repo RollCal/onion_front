@@ -72,29 +72,31 @@ function LoginModal() {
                 <ModalContent>
                     <ModalHeader>로그인</ModalHeader>
                     <ModalCloseButton />
-                    <ModalBody>
-                        {error && (
-                            <Alert status="error" mb={4}>
-                                <AlertIcon />
-                                {error}
-                            </Alert>
-                        )}
-                        <FormControl id="username">
-                            <FormLabel>Username</FormLabel>
-                            <Input id="user_id" type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
-                        </FormControl>
-                        <FormControl id="password" mt={4}>
-                            <FormLabel>Password</FormLabel>
-                            <Input id="user_pw" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-                        </FormControl>
-                    </ModalBody>
+                    <form onSubmit={(e) => { e.preventDefault(); handleLogin(); onClose(); }}>
+                        <ModalBody>
+                            {error && (
+                                <Alert status="error" mb={4}>
+                                    <AlertIcon />
+                                    {error}
+                                </Alert>
+                            )}
+                            <FormControl id="username">
+                                <FormLabel>Username</FormLabel>
+                                <Input id="user_id" type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
+                            </FormControl>
+                            <FormControl id="password" mt={4}>
+                                <FormLabel>Password</FormLabel>
+                                <Input id="user_pw" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+                            </FormControl>
+                        </ModalBody>
 
-                    <ModalFooter>
-                        <Button colorScheme="blue" mr={3} onClick={handleLogin}>
-                            Log in
-                        </Button>
-                        <Button variant="ghost" onClick={onClose}>Cancel</Button>
-                    </ModalFooter>
+                        <ModalFooter>
+                            <Button type="submit" colorScheme="blue" mr={3}>
+                                Log in
+                            </Button>
+                            <Button variant="ghost" onClick={onClose}>Cancel</Button>
+                        </ModalFooter>
+                    </form>
                 </ModalContent>
             </Modal>
         </>
