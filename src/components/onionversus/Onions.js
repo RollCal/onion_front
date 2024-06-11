@@ -1,9 +1,9 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import axios from "axios";
-import {useNavigate, useParams} from "react-router";
+import { useNavigate, useParams } from "react-router";
 import OnionFlow from "./OnionFlow";
 import CreateOnion from "./CreateOnion";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 import {
     Box,
     Button,
@@ -13,10 +13,10 @@ import {
     Spacer, Stack,
     Tooltip, useDisclosure,
 } from "@chakra-ui/react";
-import {FaArrowUp, FaArrowDown} from "react-icons/fa";
-import {MdCircle} from "react-icons/md";
-import {GlobalContext} from "../GlobalState";
-import {DeleteIcon, EditIcon} from "@chakra-ui/icons";
+import { FaArrowUp, FaArrowDown } from "react-icons/fa";
+import { MdCircle } from "react-icons/md";
+import { GlobalContext } from "../GlobalState";
+import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 
 function Onions(props) {
 
@@ -28,7 +28,7 @@ function Onions(props) {
     const [onion_color, setOnion_color] = useState();
     const [onion_writer, setOnion_writer] = useState();
 
-    const {isLoggedIn} = useContext(GlobalContext)
+    const { isLoggedIn } = useContext(GlobalContext)
 
     const [isVote, setIsVote] = useState(null);
 
@@ -67,15 +67,15 @@ function Onions(props) {
     }
 
     // 댓글 렌더링
-    const GetComments = ({comment, depth = 0},) => {
+    const GetComments = ({ comment, depth = 0 },) => {
         let icon_color = "#9747FF";
         if (comment.color === "Orange") {
             icon_color = "#F24822";
         }
         return (
-            <div style={{display: "flex", alignItems: "center"}}>
-                <MdCircle style={{marginRight: "5px", color: icon_color}}/>
-                <div style={{margin: "10px"}}>
+            <div style={{ display: "flex", alignItems: "center" }}>
+                <MdCircle style={{ marginRight: "5px", color: icon_color }} />
+                <div style={{ margin: "10px" }}>
                     <Link to={`/onion/${comment.id}`}>
                         {comment.title}
                     </Link>
@@ -135,9 +135,9 @@ function Onions(props) {
         }, config)
             .then(function (response) {
                 if (response.status === 200) {
-                    // alert("정상적으로 투표하였습니다.");
+                    alert("정상적으로 투표하였습니다.");
                 } else {
-                    // alert("투표가 취소되었습니다.");
+                    alert("투표가 취소되었습니다.");
                 }
             })
             .catch(function (erorr) {
@@ -201,7 +201,7 @@ function Onions(props) {
         )
     });
 
-    const Form = ({firstFieldRef, onCancel, onion_title, onion_id}) => {
+    const Form = ({ firstFieldRef, onCancel, onion_title, onion_id }) => {
 
         return (
             <Stack spacing={4}>
@@ -269,8 +269,8 @@ function Onions(props) {
         )
     }
 
-    const GetOnionEditForm = ({onion_title, onion_id}) => {
-        const {onOpen, onClose, isOpen} = useDisclosure()
+    const GetOnionEditForm = ({ onion_title, onion_id }) => {
+        const { onOpen, onClose, isOpen } = useDisclosure()
         const firstFieldRef = React.useRef(null)
 
         const username = localStorage.getItem("username");
@@ -280,12 +280,12 @@ function Onions(props) {
                 <>
                     <Tooltip label='DELETE ONION'>
                         <Button border='2px' size='md' bgColor="white" color="red.300"
-                                borderColor="red.300"
-                                marginTop="10px"
-                                onClick={() => {
-                                    onionDeleteButtonHandler(onion_id);
-                                }}>
-                            <DeleteIcon/>
+                            borderColor="red.300"
+                            marginTop="10px"
+                            onClick={() => {
+                                onionDeleteButtonHandler(onion_id);
+                            }}>
+                            <DeleteIcon />
                         </Button>
                     </Tooltip>
                     <Popover
@@ -298,17 +298,17 @@ function Onions(props) {
                     >
                         <PopoverTrigger>
                             <IconButton border='2px' size='md' bgColor="white" color="grey" borderColor="grey"
-                                        marginTop="10px" icon={<EditIcon/>}/>
+                                marginTop="10px" icon={<EditIcon />} />
                         </PopoverTrigger>
                         <PopoverContent p={5}>
                             <FocusLock returnFocus persistentFocus={false}>
-                                <PopoverArrow/>
+                                <PopoverArrow />
                                 <PopoverCloseButton onClick={() => {
                                     document.getElementById(`edit_input_${onion_id}`).value = onion_title
                                     onClose();
-                                }}/>
+                                }} />
                                 <Form firstFieldRef={firstFieldRef} onCancel={onClose} onion_title={onion_title}
-                                      onion_id={onion_id}/>
+                                    onion_id={onion_id} />
                             </FocusLock>
                         </PopoverContent>
                     </Popover>
@@ -321,7 +321,7 @@ function Onions(props) {
         }
     }
 
-    const CommentForm = ({firstFieldRef, onCancel, onion_title, onion_id}) => {
+    const CommentForm = ({ firstFieldRef, onCancel, onion_title, onion_id }) => {
 
         return (
             <Stack spacing={4}>
@@ -388,8 +388,8 @@ function Onions(props) {
         )
     }
 
-    const GetCommentEditForm = ({onion_title, onion_id, writer}) => {
-        const {onOpen, onClose, isOpen} = useDisclosure()
+    const GetCommentEditForm = ({ onion_title, onion_id, writer }) => {
+        const { onOpen, onClose, isOpen } = useDisclosure()
         const firstFieldRef = React.useRef(null)
 
         const username = localStorage.getItem("username");
@@ -399,12 +399,12 @@ function Onions(props) {
                 <>
                     <Tooltip label='DELETE ONION'>
                         <Button border='2px' size='xs' bgColor="white" color="red.300"
-                                borderColor="red.300"
-                                marginTop="10px"
-                                onClick={() => {
-                                    onionDeleteButtonHandler(onion_id);
-                                }}>
-                            <DeleteIcon/>
+                            borderColor="red.300"
+                            marginTop="10px"
+                            onClick={() => {
+                                onionDeleteButtonHandler(onion_id);
+                            }}>
+                            <DeleteIcon />
                         </Button>
                     </Tooltip>
                     <Popover
@@ -417,16 +417,16 @@ function Onions(props) {
                     >
                         <PopoverTrigger>
                             <IconButton border='2px' size='xs' bgColor="white" color="grey" borderColor="grey"
-                                        marginTop="10px" icon={<EditIcon/>}/>
+                                marginTop="10px" icon={<EditIcon />} />
                         </PopoverTrigger>
                         <PopoverContent p={5}>
                             <FocusLock returnFocus persistentFocus={false}>
-                                <PopoverArrow/>
+                                <PopoverArrow />
                                 <PopoverCloseButton onClick={() => {
                                     onClose();
-                                }}/>
+                                }} />
                                 <CommentForm firstFieldRef={firstFieldRef} onCancel={onClose} onion_title={onion_title}
-                                             onion_id={onion_id}/>
+                                    onion_id={onion_id} />
                             </FocusLock>
                         </PopoverContent>
                     </Popover>
@@ -446,7 +446,7 @@ function Onions(props) {
             {/*getVersusComment는 노드 클릭시 해당 노드의 댓글을 가져오기 위해 사용*/}
             {/*setOnionList는 댓글 목록 리렌더링 하기위해 사용*/}
             <OnionFlow onion_id={param.onion_id} key={param.onion_id} getVersusComment={getVersusComment}
-                       setOnionList={setOnionList} onionList={onionList}/>
+                setOnionList={setOnionList} onionList={onionList} />
             <Box>
                 <Box p={5}>
                     <Flex gap={2}>
@@ -456,100 +456,100 @@ function Onions(props) {
                                 {
                                     isVote === "Up" ? (
 
-                                            <Tooltip label='UP VOTE'>
-                                                <Button color="white" border='2px'
-                                                        borderColor={onion_color === "Orange" ? "#F24822" : "#9747FF"}
-                                                        size='md'
-                                                        bgColor={onion_color === "Orange" ? "#F24822" : "#9747FF"}
-                                                        onClick={() => {
-                                                            upVoteButtonHandler(onion, "Up")
-                                                        }}>
-                                                    {onion_title}
-                                                    <FaArrowUp/>
-                                                </Button>
-                                            </Tooltip>
-                                        )
+                                        <Tooltip label='UP VOTE'>
+                                            <Button color="white" border='2px'
+                                                borderColor={onion_color === "Orange" ? "#F24822" : "#9747FF"}
+                                                size='md'
+                                                bgColor={onion_color === "Orange" ? "#F24822" : "#9747FF"}
+                                                onClick={() => {
+                                                    upVoteButtonHandler(onion, "Up")
+                                                }}>
+                                                {onion_title}
+                                                <FaArrowUp />
+                                            </Button>
+                                        </Tooltip>
+                                    )
                                         :
                                         (
                                             <Tooltip label='UP VOTE'>
                                                 <Button color={onion_color === "Orange" ? "#F24822" : "#9747FF"}
-                                                        border='2px'
-                                                        borderColor={onion_color === "Orange" ? "#F24822" : "#9747FF"}
-                                                        size='md'
-                                                        bgColor="white" onClick={() => {
-                                                    upVoteButtonHandler(onion, "Up")
-                                                }}>
+                                                    border='2px'
+                                                    borderColor={onion_color === "Orange" ? "#F24822" : "#9747FF"}
+                                                    size='md'
+                                                    bgColor="white" onClick={() => {
+                                                        upVoteButtonHandler(onion, "Up")
+                                                    }}>
                                                     {onion_title}
-                                                    <FaArrowUp/>
+                                                    <FaArrowUp />
                                                 </Button>
                                             </Tooltip>
                                         )
                                 }
                                 {
                                     isVote === "Down" ? (
-                                            <Tooltip label='DOWN VOTE'>
-                                                <Button color="white" border='2px'
-                                                        borderColor={onion_color === "Orange" ? "#F24822" : "#9747FF"}
-                                                        size='md'
-                                                        bgColor={onion_color === "Orange" ? "#F24822" : "#9747FF"}
-                                                        onClick={() => {
-                                                            upVoteButtonHandler(onion, "Down")
-                                                        }}>
-                                                    {onion_title}
-                                                    <FaArrowDown/>
-                                                </Button>
-                                            </Tooltip>
-                                        )
+                                        <Tooltip label='DOWN VOTE'>
+                                            <Button color="white" border='2px'
+                                                borderColor={onion_color === "Orange" ? "#F24822" : "#9747FF"}
+                                                size='md'
+                                                bgColor={onion_color === "Orange" ? "#F24822" : "#9747FF"}
+                                                onClick={() => {
+                                                    upVoteButtonHandler(onion, "Down")
+                                                }}>
+                                                {onion_title}
+                                                <FaArrowDown />
+                                            </Button>
+                                        </Tooltip>
+                                    )
                                         :
                                         (
                                             <Tooltip label='DOWN VOTE'>
                                                 <Button color={onion_color === "Orange" ? "#F24822" : "#9747FF"}
-                                                        border='2px'
-                                                        borderColor={onion_color === "Orange" ? "#F24822" : "#9747FF"}
-                                                        size='md'
-                                                        bgColor="white" onClick={() => {
-                                                    upVoteButtonHandler(onion, "Down")
-                                                }}>
+                                                    border='2px'
+                                                    borderColor={onion_color === "Orange" ? "#F24822" : "#9747FF"}
+                                                    size='md'
+                                                    bgColor="white" onClick={() => {
+                                                        upVoteButtonHandler(onion, "Down")
+                                                    }}>
                                                     {onion_title}
-                                                    <FaArrowDown/>
+                                                    <FaArrowDown />
                                                 </Button>
                                             </Tooltip>
                                         )
                                 }
                             </ButtonGroup>
                         </Box>
-                        <Spacer/>
+                        <Spacer />
                         <Box>
                             <ButtonGroup>
-                                <GetOnionEditForm onion_title={onion_title} onion_id={onion}/>
+                                <GetOnionEditForm onion_title={onion_title} onion_id={onion} />
                             </ButtonGroup>
                         </Box>
                     </Flex>
                 </Box>
                 <Box>
                     댓글
-                    <hr/>
+                    <hr />
                     {onionList.map(comment =>
                         <Flex key={comment.id} gap={1}>
-                            <GetComments comment={comment}/>
+                            <GetComments comment={comment} />
                             <Tooltip label='UP VOTE'>
                                 <Button border='2px' size='xs' bgColor="white" marginTop="10px"
-                                        onClick={() => {
-                                            commentVoteButtonHandler(comment.id, "Up")
-                                        }}>
-                                    <FaArrowUp/>
+                                    onClick={() => {
+                                        commentVoteButtonHandler(comment.id, "Up")
+                                    }}>
+                                    <FaArrowUp />
                                 </Button>
                             </Tooltip>
                             <Tooltip label='DOWN VOTE'>
                                 <Button border='2px' size='xs' bgColor="white" marginTop="10px"
-                                        onClick={() => {
-                                            commentVoteButtonHandler(comment.id, "Down")
-                                        }}>
-                                    <FaArrowDown/>
+                                    onClick={() => {
+                                        commentVoteButtonHandler(comment.id, "Down")
+                                    }}>
+                                    <FaArrowDown />
                                 </Button>
                             </Tooltip>
                             <GetCommentEditForm onion_title={comment.title} onion_id={comment.id}
-                                                writer={comment.writer}/>
+                                writer={comment.writer} />
 
                         </Flex>
                     )}
@@ -557,7 +557,7 @@ function Onions(props) {
             </Box>
             {/*댓글 작성 컴포넌트*/}
             {/*setOnionList는 댓글 작성후 댓글목록 리렌더링 하기위해 사용*/}
-            <CreateOnion onion_id={onion} setOnionList={setOnionList}/>
+            <CreateOnion onion_id={onion} setOnionList={setOnionList} />
         </div>
     );
 }
