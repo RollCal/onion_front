@@ -4,7 +4,6 @@ import LogoutNotificationModal from './LogoutNotification';
 export const GlobalContext = createContext({});
 
 export const GlobalProvider = ({ children }) => {
-  console.log("render")
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   // const [showLogoutNotification, setShowLogoutNotification] = useState(false);
   function Login () {

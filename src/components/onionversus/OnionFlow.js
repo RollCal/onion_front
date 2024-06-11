@@ -39,7 +39,6 @@ function OnionFlow(props) {
             const response = await axios.get(`/api/onions/onionvisualize/${onion_id}`);
             return response.data;
         } catch (error) {
-            console.error(error);
             return null;
         }
     };
