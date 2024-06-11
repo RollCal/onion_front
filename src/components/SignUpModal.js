@@ -54,7 +54,17 @@ function SignUpModal() {
             });
 
             if (response.status === 201) {
-                setSuccess('Registration successful!');
+                setUsername('');
+                setPassword('');
+                setPassword2('');
+                setEmail('');
+                setNickname('')
+                setSelectedGender('');
+                setBirth('');
+                setConfirm('');
+                setError('');
+                setSuccess('');
+                setEmailSent(false);
                 onClose();
             } else {
                 setError(response.data.message || 'Failed to register');
