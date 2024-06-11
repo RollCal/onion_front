@@ -2,6 +2,7 @@
   "name": "onion-front",
   "version": "0.1.0",
   "private": true,
+  "proxy": "http://localhost:8000",
   "dependencies": {
     "@chakra-ui/icons": "^2.1.1",
     "@chakra-ui/react": "^2.8.2",
@@ -18,7 +19,7 @@
     "react-redux": "^9.1.2",
     "react-router": "^6.23.1",
     "react-router-dom": "^6.23.1",
-    "react-scripts": "5.0.1",
+    "react-scripts": "^5.0.1",
     "reactflow": "^11.11.3",
     "redux": "^5.0.1",
     "web-vitals": "^2.1.0"
