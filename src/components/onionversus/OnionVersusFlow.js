@@ -89,6 +89,7 @@ function OnionVersusFlow(prop) {
             alignItems: "center", // 수직으로 중앙 정렬
             fontSize: "40px",
             borderRadius: "10px",
+            cursor : "pointer",
         };
 
         new_node_list.push(newNode);

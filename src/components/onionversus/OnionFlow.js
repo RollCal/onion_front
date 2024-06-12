@@ -13,7 +13,8 @@ const nodeStyles = {
         alignItems: "center", // 수직으로 중앙 정렬
         borderRadius: "10px",
         color: "white",
-        zIndex: "0"
+        zIndex: "0",
+        cursor : "pointer",
     },
     purple: {
         backgroundColor: "#9747FF",
