@@ -35,24 +35,43 @@ React Flow: Diagram library for comment visualization
 Chakra UI: Library providing beautiful and responsive UI components
 
 
-#onion-pi.com
+## onion-pi.com
 <img width="925" alt="Screenshot 2024-06-13 at 9 13 37 PM" src="https://github.com/RollCal/onion_front/assets/75312246/e9fc82ef-9271-43b8-98ba-a43a7f04f2cc">
 
-#Ebedding search
+## Ebedding search
 <img width="1118" alt="Screenshot 2024-06-13 at 9 14 20 PM" src="https://github.com/RollCal/onion_front/assets/75312246/1c96b44e-35df-472a-b15c-05499e9e491f">
 
-#SignUp
+## SignUp
 <img width="934" alt="Screenshot 2024-06-13 at 9 14 57 PM" src="https://github.com/RollCal/onion_front/assets/75312246/3fc4bf80-cbed-41b3-8ec9-31c0a555776c">
 
-#LogIn
+## LogIn
 <img width="912" alt="Screenshot 2024-06-13 at 9 15 56 PM" src="https://github.com/RollCal/onion_front/assets/75312246/46d2f003-a300-400d-8dce-c13bee107982">
 
-#Onion-pi.com/onion_pk
+## Onion-pi.com/onion_pk
 <img width="1016" alt="Screenshot 2024-06-13 at 9 16 28 PM" src="https://github.com/RollCal/onion_front/assets/75312246/29f9de34-12bf-46db-bb3b-eb68dab0d1c6">
 
-#Voting Onion
+## Voting Onion
 <img width="1221" alt="Screenshot 2024-06-13 at 9 17 29 PM" src="https://github.com/RollCal/onion_front/assets/75312246/7c0d3abf-ac36-4726-a822-0cec7ca106ed">
 ">
 
-#Onion-pi.com/versus/create
+## Onion-pi.com/versus/create
 <img width="835" alt="Screenshot 2024-06-13 at 9 18 45 PM" src="https://github.com/RollCal/onion_front/assets/75312246/a40ca040-9d28-400c-81d8-5461042b2447">
+
+## 🐋 Docker Setting
+
+To generate the necessary React build files for running Docker, execute the following command:
+
+``
+yarn run buid
+``
+
+To run Docker, execute the following command:
+
+``
+docker compose up
+``
+
+Information about the Django API server in nginx/nginx.conf:
+
+
+https://github.com/RollCal/onion
